@@ -1,0 +1,62 @@
+/* public/fonts/setup.css */
+
+@font-face {
+  font-family: Moul;
+  src: url(Moul.ttf);
+}
+@font-face {
+  font-family: Koulen;
+  src: url(Koulen.ttf);
+}
+@font-face {
+  font-family: Bayon;
+  src: url(Bayon.ttf);
+}
+@font-face {
+  font-family: OdorMeanChey;
+  src: url(OdorMeanChey.ttf);
+}
+@font-face {
+  font-family: Nokora;
+  src: url(Nokora.ttf);
+}
+@font-face {
+  font-family: Rooster;
+  src: url(Rooster.ttf);
+}
+@font-face {
+  font-family: Limonf3;
+  src: url(Limonf3.ttf);
+}
+@font-face {
+  font-family: HandWriting;
+  src: url(HandWriting.ttf);
+}
+@font-face {
+  font-family: Oswald;
+  src: url(Oswald.ttf);
+}
+@font-face {
+  font-family: Anton;
+  src: url(Anton.ttf);
+}
+@font-face {
+  font-family: Vidaloka;
+  src: url(Vidaloka.ttf);
+}
+@font-face {
+  font-family: Courgette;
+  src: url(Courgette.ttf);
+}
+@font-face {
+  font-family: Lobster;
+  src: url(Lobster.ttf);
+}
+@font-face {
+  font-family: BlackOpsOne;
+  src: url(BlackOpsOne.ttf);
+}
+@font-face {
+  font-family: StardosStencil;
+  src: url(StardosStencil.ttf);
+}
