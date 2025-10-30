@@ -9,7 +9,7 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	//router.Static("/static", "./static")
+	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.html")
 	// Define your Gin routes here
 	router.GET("/", func(c *gin.Context) {
