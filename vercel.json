@@ -5,7 +5,7 @@
       "src": "main.go",
       "use": "@vercel/go",
       "config": {
-        "includeFiles": "templates/**" 
+        "includeFiles": "templates/**/*.html" 
       }
     }
   ],

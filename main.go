@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,10 @@ func main() {
 		})
 	})
 
-	// Run the server on port 8000
-	router.Run(":8000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+
+	router.Run(":" + port)
 }
