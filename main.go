@@ -7,9 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+var router = gin.Default()
+
+func Init() {
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.html")
 	// Define your Gin routes here
@@ -19,27 +20,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			"message": "Welcome to the homepage!",
 		})
 	})
+}
 
-	// Add more routes as needed
-	// router.POST("/api/data", yourHandlerFunction)
-
+func Handler(w http.ResponseWriter, r *http.Request) {
+	Init()
 	router.ServeHTTP(w, r)
 }
 
 func main() {
-	// Initialize Gin router with default middleware (Logger and Recovery)
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
-	router.Static("/static", "./static")
-	router.LoadHTMLGlob("templates/**/*.html")
-
-	router.GET("/", func(c *gin.Context) {
-		// Render the "index.html" template and pass data
-		c.HTML(http.StatusOK, "home.html", gin.H{
-			"title":   "My Gin Website",
-			"message": "Welcome to the homepage!",
-		})
-	})
-
+	Init()
 	router.Run(":8000")
 }
