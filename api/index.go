@@ -11,7 +11,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	router := gin.Default()
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.html")
-	// Define your Gin routes here
+	// Define your Gin routes here//
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "home.html", gin.H{
 			"title":   "My Gin Website",
