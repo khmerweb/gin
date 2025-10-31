@@ -3,6 +3,8 @@
 package handler
 
 import (
+	"gin/backend"
+	"gin/frontend"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,12 +16,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.html")
 	// Define your Gin routes here
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "home.html", gin.H{
-			"title":   "My Gin Website",
-			"message": "Welcome to the homepage!",
-		})
-	})
+	front := router.Group("/")
+	frontGroup := front.Group("/")
+	frontend.RegisterRoutes(frontGroup)
+
+	back := router.Group("/")
+	backGroup := back.Group("/admin")
+	backend.RegisterRoutes(backGroup)
+
 	router.ServeHTTP(w, r)
 }
 
@@ -28,12 +32,14 @@ func main() {
 	var router = gin.Default()
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.html")
-	// Define your Gin routes here
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "home.html", gin.H{
-			"title":   "My Gin Website",
-			"message": "Welcome to the homepage!",
-		})
-	})
+
+	front := router.Group("/")
+	frontGroup := front.Group("/")
+	frontend.RegisterRoutes(frontGroup)
+
+	back := router.Group("/")
+	backGroup := back.Group("/admin")
+	backend.RegisterRoutes(backGroup)
+
 	router.Run(":8000")
 }
