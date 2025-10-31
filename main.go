@@ -1,5 +1,4 @@
-//package main
-
+// package main
 package handler
 
 import (
@@ -13,7 +12,7 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
-	router.Static("/static", "./static")
+	router.Static("/static", "./public/static")
 	router.LoadHTMLGlob("templates/**/*.html")
 	// Define your Gin routes here
 	front := router.Group("/")
@@ -30,7 +29,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
-	router.Static("/static", "./static")
+	router.Static("/static", "./public/static")
 	router.LoadHTMLGlob("templates/**/*.html")
 
 	front := router.Group("/")
