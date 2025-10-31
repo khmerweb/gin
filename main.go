@@ -5,6 +5,7 @@ package handler
 import (
 	"gin/backend"
 	"gin/frontend"
+	"gin/login"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	front := router.Group("/")
 	frontGroup := front.Group("/")
 	frontend.RegisterRoutes(frontGroup)
+
+	loginRoute := router.Group("/")
+	loginGroup := loginRoute.Group("/login")
+	login.RegisterRoutes(loginGroup)
 
 	back := router.Group("/")
 	backGroup := back.Group("/admin")
@@ -36,6 +41,10 @@ func main() {
 	front := router.Group("/")
 	frontGroup := front.Group("/")
 	frontend.RegisterRoutes(frontGroup)
+
+	loginRoute := router.Group("/")
+	loginGroup := loginRoute.Group("/login")
+	login.RegisterRoutes(loginGroup)
 
 	back := router.Group("/")
 	backGroup := back.Group("/admin")
