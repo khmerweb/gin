@@ -7,6 +7,10 @@
       "config": {
         "includeFiles": "templates/**/*.html" 
       }
+    },
+    {
+      "src": "public/static/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
