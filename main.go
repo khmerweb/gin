@@ -10,6 +10,8 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -49,10 +51,11 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
-	//router.LoadHTMLGlob("templates/**/*.html")
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
 	router.HTMLRender = createMyRender()
 
 	front := router.Group("/")
