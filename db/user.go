@@ -1,6 +1,9 @@
 package db
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+)
 
 func CreateRootUser() {
 	mydb := Connect()
@@ -8,14 +11,16 @@ func CreateRootUser() {
 	id := uuid.New()
 	title := "Sokhavuth"
 	email := "sokhavuth@khmerweb.app"
-	password := "Tin2025"
+	passwordbyte := []byte("***********")
+	hashedPassword, err := bcrypt.GenerateFromPassword(passwordbyte, bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
+	password := string(hashedPassword)
 	role := "Admin"
 	thumb := ""
 	content := ""
 	date := ""
-	_, err := mydb.Exec(sql, id, title, email, password, role, thumb, content, date)
-	if err != nil {
-		panic(err)
-	}
+	mydb.Exec(sql, id, title, email, password, role, thumb, content, date)
 	defer mydb.Close()
 }
