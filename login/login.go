@@ -55,8 +55,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 			if err != nil {
 				if err == bcrypt.ErrMismatchedHashAndPassword {
-
-					fmt.Println("Invalid password.")
+					session.Set("userId", nil)
+					session.Save()
 					c.Redirect(http.StatusFound, "/login")
 				} else {
 					fmt.Println("Error comparing passwords:", err)
