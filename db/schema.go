@@ -2,7 +2,7 @@ package db
 
 func CreateSchema() {
 	mydb := Connect()
-
+	//defer mydb.Close()
 	sql := `CREATE TABLE IF NOT EXISTS User (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -14,6 +14,9 @@ func CreateSchema() {
 		date TEXT NOT NULL
     );`
 
-	mydb.Exec(sql)
-	defer mydb.Close()
+	_, err := mydb.Exec(sql)
+	if err != nil {
+		panic(err)
+	}
+
 }
