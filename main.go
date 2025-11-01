@@ -1,7 +1,6 @@
 // package main
-package main
 
-//package handler
+package handler
 
 import (
 	"gin/backend"
