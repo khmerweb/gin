@@ -29,8 +29,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
 	router.HTMLRender = createMyRender()
-	//router.LoadHTMLGlob("templates/**/*.html")
-	// Define your Gin routes here
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
+
 	front := router.Group("/")
 	frontGroup := front.Group("/")
 	frontend.RegisterRoutes(frontGroup)
