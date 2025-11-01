@@ -5,9 +5,9 @@ import "github.com/gin-gonic/gin"
 
 func RegisterRoutes(router *gin.RouterGroup) {
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "home.html", gin.H{
-			"title":   "My Gin Website",
-			"message": "Welcome to the homepage!",
+		c.HTML(200, "admin", gin.H{
+			"title":   "Welcome to the admin page!",
+			"message": "Welcome to the admin page!",
 		})
 	})
 	router.GET("/post/:id", func(c *gin.Context) {

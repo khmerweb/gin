@@ -1,27 +1,16 @@
+{{define "base.html"}}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/static/images/siteLogo.png" />
-    <title>{{block "title" .}}Default Title{{end}}</title>
+    <title>{{.title}}</title>
     <link href="/static/fonts/setup.css" rel="stylesheet" />
     <link href="/static/styles/base-frontend.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="/">ទំព័រ​ដើម</a>
-            <a href="/about">About</a>
-        </nav>
-    </header>
-
-    <main>
-        {{block "content" .}}<!-- Page specific content goes here -->{{end}}
-    </main>
-
-    <footer>
-        <p>&copy; 2025 My Website</p>
-    </footer>
+    {{ template "content" . }}
 </body>
 </html>
+{{end}}
