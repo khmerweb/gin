@@ -5,9 +5,11 @@ import (
 	"gin/backend"
 	"gin/frontend"
 	"gin/login"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +34,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
