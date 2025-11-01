@@ -2,13 +2,11 @@
 package login
 
 import (
-	"gin/db"
-
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterRoutes(router *gin.RouterGroup) {
-	db.CreateRootUser()
+	//db.CreateRootUser()
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "login.html", gin.H{
 			"title":   "Login Page",
