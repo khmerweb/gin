@@ -3,6 +3,7 @@ package login
 
 import (
 	"gin/db"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +37,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			defer mydb.Close()
 		}
 
-		println(u.Title)
+		log.Println(u.Title)
 	})
 }
