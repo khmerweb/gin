@@ -34,8 +34,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			userId, _ := value.(string)
 			if userId == "noUser" {
 				message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
-			} else {
-				//c.Redirect(http.StatusFound, "/admin")
+			} else if userId != "" {
+				c.Redirect(http.StatusFound, "/admin")
 			}
 		}
 		c.HTML(200, "login", gin.H{
