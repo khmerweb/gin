@@ -24,12 +24,16 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	mydb := db.Connect()
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
+		session.Clear()
+		session.Options(sessions.Options{Path: "/", MaxAge: -1})
+		session.Save()
 		userId := session.Get("userId")
+
 		var message string
-		if userId == nil {
+		if userId == "noUser" {
 			message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
-		} else {
-			c.Redirect(http.StatusFound, "/admin")
+		} else if userId != "" {
+			//c.Redirect(http.StatusFound, "/admin")
 		}
 		c.HTML(200, "login", gin.H{
 			"title":   "Login Page",
@@ -48,14 +52,14 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		u := &User{}
 		err := row.Scan(&u.Id, &u.Title, &u.Email, &u.Password, &u.Role)
 		if err != nil {
-			session.Set("userId", nil)
+			session.Set("userId", "noUser")
 			session.Save()
 			c.Redirect(http.StatusFound, "/login")
 		} else {
 			err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 			if err != nil {
 				if err == bcrypt.ErrMismatchedHashAndPassword {
-					session.Set("userId", nil)
+					session.Set("userId", "noUser")
 					session.Save()
 					c.Redirect(http.StatusFound, "/login")
 				} else {
