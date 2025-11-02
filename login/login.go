@@ -24,16 +24,19 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	mydb := db.Connect()
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
-		session.Clear()
-		session.Options(sessions.Options{Path: "/", MaxAge: -1})
-		session.Save()
-		userId := session.Get("userId")
+		//session.Clear()
+		//session.Options(sessions.Options{Path: "/", MaxAge: -1})
+		//session.Save()
+		value := session.Get("userId")
 
 		var message string
-		if userId == "noUser" {
-			message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
-		} else if userId != "" {
-			//c.Redirect(http.StatusFound, "/admin")
+		if value != nil {
+			userId, _ := value.(string)
+			if userId == "noUser" {
+				message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
+			} else {
+				//c.Redirect(http.StatusFound, "/admin")
+			}
 		}
 		c.HTML(200, "login", gin.H{
 			"title":   "Login Page",
