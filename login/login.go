@@ -28,6 +28,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		var message string
 		if userId == nil {
 			message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
+		} else {
+			c.Redirect(http.StatusFound, "/admin")
 		}
 		c.HTML(200, "login", gin.H{
 			"title":   "Login Page",
@@ -38,7 +40,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		session := sessions.Default(c)
 		email := c.PostForm("email")
 		password := c.PostForm("password")
-		println(email)
+
 		mysql := `SELECT id, title, email, password, role FROM User WHERE email = ?`
 		row := mydb.QueryRow(mysql, email)
 		defer mydb.Close()
@@ -46,11 +48,9 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		u := &User{}
 		err := row.Scan(&u.Id, &u.Title, &u.Email, &u.Password, &u.Role)
 		if err != nil {
-
 			session.Set("userId", nil)
 			session.Save()
 			c.Redirect(http.StatusFound, "/login")
-
 		} else {
 			err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 			if err != nil {

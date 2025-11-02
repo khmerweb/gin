@@ -1,14 +1,17 @@
-//package main
+package main
 
-package handler
+//package handler
 
 import (
+	"gin/api"
 	"gin/backend"
 	"gin/frontend"
 	"gin/login"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -29,8 +32,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
 	router.HTMLRender = createMyRender()
-	store := cookie.NewStore([]byte("secret"))
+	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
 	router.Use(sessions.Sessions("mysession", store))
+	router.Use(cors.Default())
 
 	front := router.Group("/")
 	frontGroup := front.Group("/")
@@ -43,6 +47,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	back := router.Group("/admin")
 	backGroup := back.Group("/")
 	backend.RegisterRoutes(backGroup)
+
+	apiRoute := router.Group("/api")
+	apiGroup := apiRoute.Group("/")
+	api.RegisterRoutes(apiGroup)
 
 	router.ServeHTTP(w, r)
 }
@@ -55,9 +63,10 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
-	store := cookie.NewStore([]byte("secret"))
+	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
 	router.Use(sessions.Sessions("mysession", store))
 	router.HTMLRender = createMyRender()
+	router.Use(cors.Default())
 
 	front := router.Group("/")
 	frontGroup := front.Group("/")
@@ -70,6 +79,10 @@ func main() {
 	back := router.Group("/admin")
 	backGroup := back.Group("/")
 	backend.RegisterRoutes(backGroup)
+
+	apiRoute := router.Group("/api")
+	apiGroup := apiRoute.Group("/")
+	api.RegisterRoutes(apiGroup)
 
 	router.Run(":8000")
 }
