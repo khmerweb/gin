@@ -1,4 +1,3 @@
-{{define "base.html"}}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,27 +9,9 @@
     <link href="/static/styles/base-frontend.css" rel="stylesheet" />
 </head>
 <body>
-    {{ template "header" . }}
-    {{ template "menu" . }}
-    {{ template "content" . }}
-    <section class="Footer">
-    <footer class="wrapper">
-        <p>Copyright &copy;2025 Khmer Web</p>
-        <p>Powered by <a target="_blank" href="https://gin-gonic.com/en/docs/">Gin</a> & <a target="_blank" href="https://turso.tech/">Turso</a></p>
-    </footer>
-    </section>
-
-    <style>
-        .Footer .wrapper{
-            text-align: center;
-            padding: 50px 0;
-            background: rgb(44, 44, 44);
-            color: white;
-        }
-        .Footer .wrapper a{
-            color: orange;
-        }
-    </style>
+    {{block "header" .}}Header{{end}}
+    {{block "menu" .}}{{end}}
+    {{block "content" .}}Header{{end}}
+    {{template "footer.html" .}}
 </body>
 </html>
-{{end}}

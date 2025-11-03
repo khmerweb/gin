@@ -22,8 +22,8 @@ import (
 
 func createMyRender() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
-	r.AddFromFiles("home", "templates/layouts/base.html", "templates/pages/home.html")
-	r.AddFromFiles("admin", "templates/layouts/base.html", "templates/pages/admin.html")
+	r.AddFromFiles("home", "templates/layouts/base.html", "templates/pages/home.html", "templates/partials/footer.html")
+	r.AddFromFiles("admin", "templates/layouts/baseAdmin.html", "templates/pages/admin.html", "templates/partials/headerAdmin.html", "templates/partials/footer.html")
 	r.AddFromFiles("login", "templates/pages/login.html")
 	return r
 }
@@ -34,6 +34,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	router.Static("/static", "./public/static")
 	router.HTMLRender = createMyRender()
 	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
+	store.Options(sessions.Options{MaxAge: 0, Path: "/"})
 	router.Use(sessions.Sessions("mysession", store))
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://khmertube.vercel.app/"},
@@ -75,6 +76,7 @@ func main() {
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
 	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
+	store.Options(sessions.Options{MaxAge: 0, Path: "/"})
 	router.Use(sessions.Sessions("mysession", store))
 	router.HTMLRender = createMyRender()
 	router.Use(cors.Default())

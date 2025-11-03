@@ -1,0 +1,64 @@
+<section class="Header">
+    <div class="inner region">
+        <a href="/admin" class="logo"><img src="/static/images/Go.png" /></a>
+        <form method="POST">
+            <input type="text" placeholder="Search" />
+            <input type="button" value="ស្វែងរក" />
+        </form>
+        <div class="login">
+            <a>User</a> | 
+            <a href="/">ទំព័រ​មុខ</a> | 
+            <a href="/admin/logout">ចេញ​ក្រៅ</a>
+        </div>
+    </div>
+<style>
+    .Header {
+        background: var(--background-dark);
+        color: white;
+    }
+    .Header .inner{
+        display: grid;
+        grid-template-columns: 20% auto 20%;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .Header .inner form{
+        display: grid;
+        grid-template-columns: auto 20%;
+        align-items: center;
+    }
+    .Header .inner img{
+        height: 40px;
+        float: left;
+    }
+    .Header .inner input{
+        font: var(--body-font);
+        padding: 2px 10px;
+        height: 30px;
+    }
+    .Header .inner .login{
+        text-align: right;
+    }
+    .Header .inner .login a{
+        color: white;
+    }
+
+    @media only screen and (max-width: 600px){
+        .Header .inner{
+            grid-template-columns: 100%;
+            text-align: center;
+            padding: 10px
+        }
+        .Header .inner form{
+            padding: 10px 0;
+        }
+        .Header .inner img{
+            float: none;
+            margin: 0 auto;
+        }
+        .Header .inner .login{
+            text-align: center;
+        }
+    }
+</style>
+</section>
