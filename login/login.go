@@ -20,19 +20,18 @@ type User struct {
 }
 
 func RegisterRoutes(router *gin.RouterGroup) {
-	//db.CreateRootUser()
+	//user.CreateRootUser()
 	mydb := db.Connect()
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
 		value := session.Get("userId")
-		// value_user := session.Get("user")
+
 		var message string
 		if value != nil {
 			userId, _ := value.(string)
 			if userId == "noUser" {
 				message = "Email ឬ ​ពាក្យ​សំងាត់​មិន​ត្រូវ​ទេ!"
 			} else {
-				fmt.Println(userId)
 				c.Redirect(http.StatusFound, "/admin")
 
 			}

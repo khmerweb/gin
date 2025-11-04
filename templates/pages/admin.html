@@ -2,52 +2,34 @@
 
 {{ define "title" }}Admin Page{{ end }}
 
-{{ define "header" }}
-
-{{ end }}
-
 {{ define "content" }}
 <section class="Admin region">
     <main>
-        <aside>
-			<div class='inner'>
-				<a href="/amin"><img src="/static/images/movie.png" alt='' /></a>
-				<span><a href="/admin">ការផ្សាយ</a></span>
-				<a href="/amin/category"><img src="/static/images/category.png" alt='' /></a>
-				<span><a href="/admin/category">ជំពូក</a></span>
-				<a href="/amin/page"><img src="/static/images/page.png" alt=''/></a>
-				<span><a href="/admin/page">ទំព័រ​ស្តាទិក</a></span>
-				<a href='/admin/upload'><img src="/static/images/upload.png" alt='' /></a>
-				<span><a href="/admin/upload">Upload</a></span>
-				<a href="/amin/user"><img src="/static/images/users.png" alt='' /></a>
-				<span><a href="/admin/user">អ្នក​និពន្ធ</a></span>
-				<a href="/amin/setting"><img src="/static/images/setting.png" alt='' /></a>
-				<span><a href="/admin/setting">Setting</a></span>
-			</div>
-		</aside>
+        <aside>{{template "menuAdmin.html" .}}</aside>
+        {{ block "editor" .}}
         <div class="Editor">
-            <form action="/admin/post?/create" method="post" onsubmit={submitForm}>
+            <form action="/admin/post" method="post" onsubmit="submitForm()">
                 <input type="text" name="title" required placeholder="ចំណងជើង" />
                 <div class="wrapper">
                     <textarea name="content" id="editor"></textarea>
                 </div>
-                <input type="text" bind:value={categories} name="categories" required placeholder="ជំពូក" />
+                <input type="text" value="" name="categories" required placeholder="ជំពូក" />
                 <div class="frame">
-                    <select name="category" bind:value={category} onchange={getCategory} >
+                    <select name="category" value="" onchange="getCategory()" >
                         <option disabled selected>ជ្រើសរើស​យក​ជំពូក</option>
                     
                         <option>{category.title}</option>
                     
                     </select>
                     <input type="text" name="thumb" required placeholder="រូប​​តំណាង" />
-                    <input type="datetime-local" step="1" name="datetime" required />
+                    <input type="datetime-local" step="1" name="date" required />
                     <input type="submit" value="ចុះ​ផ្សាយ" />
-                    <input type="hidden" name="videos" bind:value={json} />
+                    <input type="hidden" name="videos" value="" />
                 </div>
                 <script src="/static/scripts/ckeditor/config.js"></script>
             </form>
             <div class='form'>
-                <select name='type' bind:value={type} >
+                <select name='type' >
                     <option>YouTube</option>
                     <option>YouTubePlaylist</option>
                     <option>Facebook</option>
@@ -55,54 +37,44 @@
                     <option>Dailymotion</option>
                     <option>Vimeo</option>
                 </select>
-                <input name='videoid' bind:value={id} type='text' placeholder="អត្តសញ្ញាណ​វីដេអូ" required />
-                <select name='status' bind:value={status} >
+                <input name='videoid' value="" type='text' placeholder="អត្តសញ្ញាណ​វីដេអូ" required />
+                <select name='status' >
                     <option>ចប់</option>
                     <option>នៅ​មាន​ត</option>
                     <option>~ ចប់</option>
                 </select>
-                <input onclick={genJson} type="button" value="បញ្ចូលវីដេអូ" />
+                <input onclick="genJson()" type="button" value="បញ្ចូលវីដេអូ" />
+            </div>
+            <div class='viddata'>
+                <div class="caption"></div>
+                <div class="part"></div>
             </div>
         </div>
+        {{ end }}
     </main>
-    <footer>Footer</div>
+    <footer>Footer</footer>
+</section>
+    
+<style>
+    .Admin main{
+		margin-top: 10px;
+		margin-bottom: 30px;
+        display: grid;
+		grid-template-columns: 25% auto;
+		grid-gap: 10px;
+	}
+    .Admin aside{
+        background-color: var(--background);
+    }
 
-    <style>
-        .Admin main{
-		    margin-top: 10px;
-		    margin-bottom: 30px;
-            display: grid;
-		    grid-template-columns: 25% auto;
-		    grid-gap: 10px;
-	    }
-	
-	    .Admin main aside, 
-	    .Admin main aside .inner{
-		    background-color: var(--background);
-	    }
-	    .Admin main aside .inner{
-		    display: grid;
-		    grid-template-columns: 50px auto;
-		    align-items: center;
-		    grid-gap: 20px 10px;
-		    padding: 15px;
-	    }
-	    .Admin main aside img{
-		    width: 100%;
-		    float: left;
-	    }
-	    .Admin main aside a{
-		    font: 18px/1.5 Oswald, Bayon;
-	    }
-
-	    @media only screen and (max-width: 600px){
-		    .Admin{
-			    padding: 10px;
-		    }
-		    .Admin main{
-			    grid-template-columns: 100%;
-		    }
-	    }
+	@media only screen and (max-width: 600px){
+		.Admin{
+			padding: 10px;
+		}
+		.Admin main{
+			grid-template-columns: 100%;
+		}
+	}
 
     .Editor{
         background-color: white;
@@ -117,7 +89,8 @@
         font: var(--body-font);
         padding: 3px 5px;
     }
-    .Editor .frame, .Editor .form, .Editor .viddata div{
+    .Editor .frame, .Editor .form, .Editor .viddata .caption div,
+    .Editor .viddata .part div{
         display: grid;
         grid-template-columns: 20% 32.5% 32.5% 15%;
     }
@@ -140,8 +113,5 @@
     .Editor .viddata input{
         background: white;
     }
-    
-    </style>
-</section>
-    
+</style>
 {{ end }}

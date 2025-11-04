@@ -1,6 +1,6 @@
-//package main
+package main
 
-package handler
+//package handler
 
 import (
 	"gin/api"
@@ -22,8 +22,18 @@ import (
 
 func createMyRender() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
-	r.AddFromFiles("home", "templates/layouts/base.html", "templates/pages/home.html", "templates/partials/footer.html")
-	r.AddFromFiles("admin", "templates/layouts/baseAdmin.html", "templates/pages/admin.html", "templates/partials/headerAdmin.html", "templates/partials/footer.html")
+	r.AddFromFiles("home",
+		"templates/layouts/base.html",
+		"templates/pages/home.html",
+		"templates/partials/footer.html",
+	)
+	r.AddFromFiles("admin",
+		"templates/layouts/baseAdmin.html",
+		"templates/pages/admin.html",
+		"templates/partials/headerAdmin.html",
+		"templates/partials/footer.html",
+		"templates/partials/menuAdmin.html",
+	)
 	r.AddFromFiles("login", "templates/pages/login.html")
 	return r
 }
@@ -72,7 +82,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
 	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
