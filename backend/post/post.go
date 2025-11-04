@@ -5,18 +5,19 @@ import (
 	"gin/db"
 	"time"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type Post struct {
 	ID         string `json:"id"`
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-	Categories string `json:"categories"`
-	Thumb      string `json:"thumb"`
-	Date       string `json:"date"`
-	Videos     string `json:"videos"`
+	Title      string `json:"title" form:"title" binding:"required"`
+	Content    string `json:"content" form:"content"`
+	Categories string `json:"categories" form:"categories" binding:"required"`
+	Thumb      string `json:"thumb" form:"thumb" binding:"required"`
+	Date       string `json:"date" form:"date" binding:"required"`
+	Videos     string `json:"videos" form:"videos"`
 	Author     string `json:"author"`
 	CreatedAt  string `json:"created_at"`
 }
@@ -29,6 +30,15 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	})
 
 	router.POST("/", func(c *gin.Context) {
+		session := sessions.Default(c)
+		var post Post
+		if err := c.ShouldBind(&post); err != nil {
+			session.AddFlash("Unable to create post!", "error")
+			session.Save()
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
 		id := uuid.New()
 		title := c.PostForm("title")
 		content := c.PostForm("content")
@@ -43,6 +53,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		sql := `INSERT INTO Post VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
 		mydb.Exec(sql, id, title, content, categories, thumb, date, videos, author, created_at)
 		defer mydb.Close()
+		session.AddFlash("Post created successfully!", "success")
+		session.Save()
 		c.Redirect(302, "/admin")
 	})
 }

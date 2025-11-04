@@ -52,13 +52,23 @@
         </div>
         {{ end }}
     </main>
-    <footer>Footer</footer>
+    {{range .SuccessMessages}}
+        <div style="color: white; background: green ; padding: 5px 10px; text-align: center;">
+            {{.}}
+        </div>
+    {{end}}
+
+    {{range .ErrorMessages}}
+        <div style="color: white; background: red; padding: 5px 10px; text-align: center;">
+            {{.}}
+        </div>
+    {{end}}
 </section>
-    
+
 <style>
     .Admin main{
 		margin-top: 10px;
-		margin-bottom: 30px;
+		margin-bottom: 10px;
         display: grid;
 		grid-template-columns: 25% auto;
 		grid-gap: 10px;

@@ -1,4 +1,5 @@
 // backend/backend.go
+// go mod tidy
 package backend
 
 import (
@@ -29,10 +30,16 @@ func RegisterRoutes(router *gin.RouterGroup) {
 
 	router.GET("/", func(c *gin.Context) {
 		userName, _ := c.Get("userName")
+		session := sessions.Default(c)
+		successFlashes := session.Flashes("success")
+		errorFlashes := session.Flashes("error")
+		session.Save()
 
 		c.HTML(200, "admin", gin.H{
-			"title":    "Admin Page",
-			"userName": userName,
+			"title":           "Admin Page",
+			"userName":        userName,
+			"SuccessMessages": successFlashes,
+			"ErrorMessages":   errorFlashes,
 		})
 
 	})
