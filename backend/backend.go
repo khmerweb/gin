@@ -29,19 +29,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	router.Use(AuthRequired())
 
 	router.GET("/", func(c *gin.Context) {
-		userName, _ := c.Get("userName")
-		session := sessions.Default(c)
-		successFlashes := session.Flashes("success")
-		errorFlashes := session.Flashes("error")
-		session.Save()
-
-		c.HTML(200, "admin", gin.H{
-			"title":           "Admin Page",
-			"userName":        userName,
-			"SuccessMessages": successFlashes,
-			"ErrorMessages":   errorFlashes,
-		})
-
+		c.Redirect(302, "/admin/post")
 	})
 
 	router.GET("/logout", func(c *gin.Context) {

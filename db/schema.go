@@ -1,6 +1,6 @@
 package db
 
-func CreateSchema() {
+func CreateSchemas() {
 	mydb := Connect()
 	//defer mydb.Close()
 	sql_user := `CREATE TABLE IF NOT EXISTS User (

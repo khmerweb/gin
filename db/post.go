@@ -1,0 +1,103 @@
+package db
+
+import (
+	"time"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+)
+
+type Post struct {
+	ID         string `json:"id"`
+	Title      string `json:"title" form:"title" binding:"required"`
+	Content    string `json:"content" form:"content"`
+	Categories string `json:"categories" form:"categories" binding:"required"`
+	Thumb      string `json:"thumb" form:"thumb" binding:"required"`
+	Date       string `json:"date" form:"date" binding:"required"`
+	Videos     string `json:"videos" form:"videos"`
+	Author     string `json:"author"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+}
+
+func CreateSchema() {
+	mydb := Connect()
+	defer mydb.Close()
+	sql := `CREATE TABLE IF NOT EXISTS Post (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        content TEXT,
+		categories TEXT NOT NULL,
+		thumb TEXT NOT NULL,
+		date TEXT NOT NULL,
+		videos TEXT,
+		author TEXT NOT NULL,
+		created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+	CREATE TRIGGER IF NOT EXISTS delete_old_posts 
+        AFTER INSERT ON Post
+        BEGIN
+            DELETE FROM Post 
+            WHERE created_at < DATE('now', '-90 days') AND categories LIKE '%news%';
+        END;
+
+    CREATE TRIGGER IF NOT EXISTS update_timestamp_trigger
+        AFTER UPDATE ON Post
+        FOR EACH ROW
+        BEGIN
+            UPDATE Post
+            SET updated_at = CURRENT_TIMESTAMP
+    		WHERE id = NEW.id;
+        END;
+	`
+
+	_, err := mydb.Exec(sql)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func CountPosts() int {
+	mydb := Connect()
+	defer mydb.Close()
+	var count int
+	sql := `SELECT COUNT(*) FROM Post`
+	row := mydb.QueryRow(sql)
+	row.Scan(&count)
+	return count
+}
+
+func CreatePost(c *gin.Context) {
+	mydb := Connect()
+	defer mydb.Close()
+
+	post := Post{}
+	session := sessions.Default(c)
+	if err := c.ShouldBind(&post); err != nil {
+		session.AddFlash("មាន​បញ្ហា​ក្នុង​ការបង្កើត​ការផ្សាយ!", "error")
+		session.Save()
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	id := uuid.New()
+	title := c.PostForm("title")
+	content := c.PostForm("content")
+	categories := c.PostForm("categories")
+	thumb := c.PostForm("thumb")
+	date := c.PostForm("date")
+	videos := c.PostForm("videos")
+	userId, _ := c.Get("userId")
+	author := userId.(string)
+	created_at := time.Now().Format("2006-01-02T15:04:05")
+	updated_at := time.Now().Format("2006-01-02T15:04:05")
+
+	sql := `INSERT INTO Post VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+	mydb.Exec(sql, id, title, content, categories, thumb, date, videos, author, created_at, updated_at)
+	defer mydb.Close()
+	session.AddFlash("ការផ្សាយ​ត្រូវ​បាន​បង្កើត​ឡើងដោយ​ជោគជ័យ!", "success")
+	session.Save()
+}
