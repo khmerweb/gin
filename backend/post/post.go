@@ -32,7 +32,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountPosts()
 		pageNumbers := make([]int, 0)
-		pageCount := (count + 20 - 1) / 20
+		pageCount := (count + 10 - 1) / 10
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
@@ -40,7 +40,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		mydb := db.Connect()
 		post := &Post{}
 		mysql := `SELECT * FROM Post ORDER BY date DESC LIMIT ?`
-		rows, err := mydb.Query(mysql, 20)
+		rows, err := mydb.Query(mysql, 10)
 		if err != nil {
 			fmt.Println("Error querying database:", err)
 			return
