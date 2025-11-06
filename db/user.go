@@ -1,14 +1,12 @@
-package user
+package db
 
 import (
-	"gin/db"
-
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateRootUser() {
-	mydb := db.Connect()
+	mydb := Connect()
 	sql := `INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 	id := uuid.New()
 	title := "Sokhavuth"

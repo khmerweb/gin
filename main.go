@@ -7,6 +7,7 @@ import (
 	"gin/backend"
 	"gin/frontend"
 	"gin/login"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -20,19 +21,31 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func formatDate(layout string, dateString string) (string, error) {
+	t, err := time.Parse("2006-01-02T15:04:05", dateString)
+	if err != nil {
+		return "", err
+	}
+	return t.Format(layout), nil
+}
+
 func createMyRender() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
-	r.AddFromFiles("home",
+	funcMap := template.FuncMap{
+		"formatDate": formatDate,
+	}
+	r.AddFromFilesFuncs("home", funcMap,
 		"templates/layouts/base.html",
 		"templates/pages/home.html",
 		"templates/partials/footer.html",
 	)
-	r.AddFromFiles("admin",
+	r.AddFromFilesFuncs("admin", funcMap,
 		"templates/layouts/baseAdmin.html",
 		"templates/pages/admin.html",
 		"templates/partials/headerAdmin.html",
 		"templates/partials/footer.html",
 		"templates/partials/menuAdmin.html",
+		"templates/partials/items.html",
 	)
 	r.AddFromFiles("login", "templates/pages/login.html")
 	return r

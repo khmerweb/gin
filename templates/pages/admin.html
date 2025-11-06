@@ -64,8 +64,9 @@
         </div>
     {{end}}
     <div style="color: black; background: lightgrey; padding: 5px 10px; text-align: center; margin-top: 10px;">
-        {{.Items}}​ទាំងអស់​មាន​ចំនួនៈ {{.PostCount}}
+        {{.Route}}​ទាំងអស់​មាន​ចំនួនៈ {{.PostCount}}
     </div>
+    {{template "items.html" .}}
 </section>
 
 <style>

@@ -21,7 +21,7 @@ type Post struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
-func CreateSchema() {
+func CreatePostSchema() {
 	mydb := Connect()
 	defer mydb.Close()
 	sql := `CREATE TABLE IF NOT EXISTS Post (

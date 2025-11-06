@@ -37,7 +37,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			}
 		}
 		c.HTML(200, "login", gin.H{
-			"title":   "Login Page",
+			"Title":   "ទំព័រ​ចូល​ក្នុង",
 			"message": message,
 		})
 	})
