@@ -1,0 +1,131 @@
+{{template "baseAdmin.html" .}}
+
+{{ define "title" }}Admin Page{{ end }}
+
+{{ define "content" }}
+<section class="Admin region">
+    <main>
+        <aside>{{template "menuAdmin.html" .}}</aside>
+        {{ block "editor" .}}
+        <div class="Editor">
+            <form action="/admin/post" method="post" onsubmit="submitForm()">
+                <input type="text" name="title" value="{{.Post.Title}}" required placeholder="ចំណងជើង" />
+                <div class="wrapper">
+                    <textarea name="content" id="editor">{{.Post.Content}}</textarea>
+                </div>
+                <input type="text" value="{{.Post.Categories}}" name="categories" required placeholder="ជំពូក" />
+                <div class="frame">
+                    <select name="category" value="" onchange="getCategory()" >
+                        <option disabled selected>ជ្រើសរើស​យក​ជំពូក</option>
+                    
+                        <option>{category.title}</option>
+                    
+                    </select>
+                    <input type="text" name="thumb" value="{{.Post.Thumb}}" required placeholder="រូប​​តំណាង" />
+                    <input type="datetime-local" step="1" name="date" value="{{.Post.Date}}" required />
+                    <input type="submit" value="ចុះ​ផ្សាយ" />
+                    <input type="hidden" name="videos" value="{{.Post.Videos}}" />
+                </div>
+                <script src="/static/scripts/ckeditor/config.js"></script>
+            </form>
+            <div class='form'>
+                <select name='type' >
+                    <option>YouTube</option>
+                    <option>YouTubePlaylist</option>
+                    <option>Facebook</option>
+                    <option>OK</option>
+                    <option>Dailymotion</option>
+                    <option>Vimeo</option>
+                </select>
+                <input name='videoid' value="" type='text' placeholder="អត្តសញ្ញាណ​វីដេអូ" required />
+                <select name='status' >
+                    <option>ចប់</option>
+                    <option>នៅ​មាន​ត</option>
+                    <option>~ ចប់</option>
+                </select>
+                <input onclick="genJson()" type="button" value="បញ្ចូលវីដេអូ" />
+            </div>
+            <div class='viddata'>
+                <div class="caption"></div>
+                <div class="part"></div>
+            </div>
+        </div>
+        {{ end }}
+    </main>
+    {{range .SuccessMessages}}
+        <div style="color: white; background: green ; padding: 5px 10px; text-align: center;">
+            {{.}}
+        </div>
+    {{end}}
+
+    {{range .ErrorMessages}}
+        <div style="color: white; background: red; padding: 5px 10px; text-align: center;">
+            {{.}}
+        </div>
+    {{end}}
+    <div style="color: black; background: lightgrey; padding: 5px 10px; text-align: center; margin-top: 10px;">
+        {{.Route}}​ទាំងអស់​មាន​ចំនួនៈ {{.PostCount}}
+    </div>
+    {{template "items.html" .}}
+</section>
+
+<style>
+    .Admin main{
+		margin-top: 10px;
+		margin-bottom: 10px;
+        display: grid;
+		grid-template-columns: 25% auto;
+		grid-gap: 10px;
+	}
+    .Admin aside{
+        background-color: var(--background);
+    }
+
+	@media only screen and (max-width: 600px){
+		.Admin{
+			padding: 10px;
+		}
+		.Admin main{
+			grid-template-columns: 100%;
+		}
+	}
+
+    .Editor{
+        background-color: white;
+        height: 100%;
+    } 
+    .Editor .wrapper{
+        height: 310px;
+    }
+    .Editor input, .Editor select,
+    .Editor .form input, .Editor .form select{
+        width: 100%;
+        font: var(--body-font);
+        padding: 3px 5px;
+    }
+    .Editor .frame, .Editor .form, .Editor .viddata .caption div,
+    .Editor .viddata .part div{
+        display: grid;
+        grid-template-columns: 20% 32.5% 32.5% 15%;
+    }
+    .Editor .viddata div{
+        width: 100%;
+    }
+    .Editor .viddata div button:hover{
+        cursor: pointer;
+        color: red;
+    }
+    .Editor .viddata b,
+    .Editor .viddata input{
+        font: var(--body-font);
+        padding: 5px;
+        background: lightgrey;
+        border: 1px solid grey;
+        text-align: center;
+        color: black;
+    }
+    .Editor .viddata input{
+        background: white;
+    }
+</style>
+{{ end }}

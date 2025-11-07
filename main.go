@@ -1,6 +1,6 @@
-//package main
+package main
 
-package handler
+//package handler
 
 import (
 	"gin/api"
@@ -42,6 +42,14 @@ func createMyRender() multitemplate.Renderer {
 	r.AddFromFilesFuncs("admin", funcMap,
 		"templates/layouts/baseAdmin.html",
 		"templates/pages/admin.html",
+		"templates/partials/headerAdmin.html",
+		"templates/partials/footer.html",
+		"templates/partials/menuAdmin.html",
+		"templates/partials/items.html",
+	)
+	r.AddFromFilesFuncs("admin-edit", funcMap,
+		"templates/layouts/baseAdmin.html",
+		"templates/pages/admin-edit.html",
 		"templates/partials/headerAdmin.html",
 		"templates/partials/footer.html",
 		"templates/partials/menuAdmin.html",

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -100,4 +101,56 @@ func CreatePost(c *gin.Context) {
 	defer mydb.Close()
 	session.AddFlash("ការផ្សាយ​ត្រូវ​បាន​បង្កើត​ឡើងដោយ​ជោគជ័យ!", "success")
 	session.Save()
+}
+
+func GetPosts(limit int) []Post {
+	mydb := Connect()
+	post := &Post{}
+	mysql := `SELECT * FROM Post ORDER BY date DESC LIMIT ?`
+	rows, err := mydb.Query(mysql, limit)
+	if err != nil {
+		fmt.Println("Error querying database:", err)
+		return nil
+	}
+	defer rows.Close()
+	var posts []Post
+	for rows.Next() {
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			continue
+		}
+		posts = append(posts, *post)
+	}
+	return posts
+}
+
+func DeletePost(id string, c *gin.Context) {
+	session := sessions.Default(c)
+	mydb := Connect()
+	mysql := `DELETE FROM Post WHERE id = ?`
+	_, err := mydb.Exec(mysql, id)
+	if err != nil {
+		session.AddFlash("មាន​បញ្ហា​ក្នុង​ការលុបការផ្សាយ!", "error")
+		session.Save()
+		fmt.Println("Error deleting post:", err)
+		return
+	}
+	defer mydb.Close()
+	session.AddFlash("​ការផ្សាយត្រូវ​​បានលុប​​ដោយ​ជោគជ័យ!", "success")
+	session.Save()
+}
+
+func GetPost(id string) Post {
+	mydb := Connect()
+	post := &Post{}
+	mysql := `SELECT * FROM Post WHERE id = ?`
+	row := mydb.QueryRow(mysql, id)
+	err := row.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+	if err != nil {
+		fmt.Println("Error scanning row:", err)
+		return Post{}
+	}
+	defer mydb.Close()
+	return *post
 }

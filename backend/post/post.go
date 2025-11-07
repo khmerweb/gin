@@ -2,8 +2,8 @@
 package post
 
 import (
-	"fmt"
 	"gin/db"
+	"gin/settings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -36,25 +36,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		println("Page Numbers:", pageNumbers)
-		mydb := db.Connect()
-		post := &Post{}
-		mysql := `SELECT * FROM Post ORDER BY date DESC LIMIT ?`
-		rows, err := mydb.Query(mysql, 10)
-		if err != nil {
-			fmt.Println("Error querying database:", err)
-			return
-		}
-		defer rows.Close()
-		var posts []Post
-		for rows.Next() {
-			err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
-			if err != nil {
-				fmt.Println("Error scanning row:", err)
-				continue
-			}
-			posts = append(posts, *post)
-		}
+		dashboard := settings.Setup().Dashboard
+		posts := db.GetPosts(dashboard)
 		c.HTML(200, "admin", gin.H{
 			"Title":           "ទំព័រ​ការផ្សាយ",
 			"UserName":        userName,
@@ -64,7 +47,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"PostCount":       count,
 			"Items":           posts,
 			"Type":            "post",
-			"Value":           "post",
+			"Value":           1,
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      1,
 		})
@@ -73,5 +56,42 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	router.POST("/", func(c *gin.Context) {
 		db.CreatePost(c)
 		c.Redirect(302, "/admin/post")
+	})
+
+	router.GET("/delete/:id", func(c *gin.Context) {
+		postID := c.Param("id")
+		db.DeletePost(postID, c)
+		c.Redirect(302, "/admin/post")
+	})
+
+	router.GET("/edit/:id", func(c *gin.Context) {
+		userName, _ := c.Get("userName")
+		session := sessions.Default(c)
+		successFlashes := session.Flashes("success")
+		errorFlashes := session.Flashes("error")
+		session.Save()
+		count := db.CountPosts()
+		post := db.GetPost(c.Param("id"))
+		pageNumbers := make([]int, 0)
+		pageCount := (count + 10 - 1) / 10
+		for i := 0; i < pageCount; i++ {
+			pageNumbers = append(pageNumbers, i+1)
+		}
+		dashboard := settings.Setup().Dashboard
+		posts := db.GetPosts(dashboard)
+		c.HTML(200, "admin-edit", gin.H{
+			"Title":           "ទំព័រ​កែប្រែការផ្សាយ",
+			"UserName":        userName,
+			"Post":            post,
+			"SuccessMessages": successFlashes,
+			"ErrorMessages":   errorFlashes,
+			"Route":           "ការផ្សាយ",
+			"PostCount":       count,
+			"Items":           posts,
+			"Type":            "post",
+			"Value":           "pageNumber",
+			"PageNumbers":     pageNumbers,
+			"PageNumber":      1,
+		})
 	})
 }
