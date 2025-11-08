@@ -8,7 +8,7 @@
         <aside>{{template "menuAdmin.html" .}}</aside>
         {{ block "editor" .}}
         <div class="Editor">
-            <form action="/admin/post/edit/{{.Post.ID}}" method="post" onsubmit="submitForm()">
+            <form action="/admin/post/edit/{{.Post.ID}}?p={{.PageNumber}}" method="post" onsubmit="submitForm()">
                 <input type="text" name="title" value="{{.Post.Title}}" required placeholder="ចំណងជើង" />
                 <div class="wrapper">
                     <textarea name="content" id="editor">{{.Post.Content}}</textarea>

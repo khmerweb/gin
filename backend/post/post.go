@@ -99,7 +99,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 
 	router.POST("/edit/:id", func(c *gin.Context) {
 		db.UpdatePost(c)
-		c.Redirect(302, "/admin/post/edit/"+c.Param("id"))
+		page, _ := c.GetQuery("p")
+		c.Redirect(302, "/admin/post/edit/"+c.Param("id")+"?p="+page)
 	})
 
 	router.GET("/paginate/:page", func(c *gin.Context) {
