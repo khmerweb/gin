@@ -90,3 +90,71 @@ function submitForm(){
         $('input[name="videos"]').val(newJson)
     }
 }
+
+function loadVideos(rawVideos){
+    if(rawVideos.length){
+        const videos = JSON.parse(rawVideos)
+        episode = videos.length
+        for(let v=0; v<videos.length; v++){
+            let html = ``
+            for(let key in videos[v]){
+                html += `<input value="${videos[v][key]}" />`
+            }
+            html += `<button title="Delete" onClick="deleteRow(event)" class="episode">${episode--}</button>`
+            if($('.viddata .caption').html() === ''){
+                const caption = `<div><b>ប្រភេទ​</b><b>អត្តសញ្ញាណ​</b><b>ចប់ឬ​នៅ?</b><b>ភាគ/លុប</b></div>`
+                $('.viddata .caption').append(caption)
+            }
+            $('.viddata .part').append(`<div>${html}</div>`)
+        }
+    }
+}
+
+function addQueryString(){
+    $('.editLink').on('click', function(event) {
+        event.preventDefault();
+        let currentHref = $(this).attr('href');
+        let selectedPage = $('.pagination select').val();
+        let newQueryString = `p=${selectedPage}`
+        let newHref = currentHref + "?" + newQueryString;
+        window.location.href = newHref
+    })
+}
+
+$(document).ready(function(){
+    const rawVideos = $('input[name="videos"]').val()
+    loadVideos(rawVideos)
+    addQueryString()
+});
+
+
+
+async function paginate(type, e){
+	const response = await fetch(`/admin/${type}/paginate/${e.target.value}`)
+	let Items = await response.json()
+    $('.Items .items').empty()
+    for(let item of Items.items){
+        let html = `
+        <div class="item">
+            <a class="thumb" href="/${type}/${item.id}">
+                <img src="${item.thumb}" />
+                ${item.videos !== "" ? `<img class="play" src="/static/images/play.png" alt='' />` : ''}
+            </a>
+            <div class="title">
+                <a href="/${type}"/${item.id}>${item.title}</a>
+                <div>${new Date(item.date).toLocaleDateString('it-IT')}</div>
+            </div>
+            <div class="edit">
+				<a href="/admin/${type}/delete/${item.id}" onclick="return confirm('Are you sure you want to delete this item?');" >
+					<img src="/static/images/delete.png" alt=''/>
+				</a>
+                <a class="editLink" style="padding-right:5px;" href="/admin/${type}/edit/${item.id}">
+					<img src="/static/images/edit.png" alt='' />
+				</a>
+            </div> 
+        </div>
+        `
+        $('.Items .items').append(html)
+        addQueryString()
+    }
+}

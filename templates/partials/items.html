@@ -1,4 +1,4 @@
-<footer class="region">
+<footer class="Items region">
 	
     <div class="items">
         {{range .Items}} 
@@ -15,19 +15,20 @@
                 <div>{{formatDate "02-01-2006" .Date}}</div>
             </div>
             <div class="edit">
-				<a href="/admin/{{$.Type}}/delete/{{.ID}}">
+				<a href="/admin/{{$.Type}}/delete/{{.ID}}" onclick="return confirm('Are you sure you want to delete this item?');">
 					<img src="/static/images/delete.png" alt=''/>
 				</a>
-                <a style="padding-right:5px;" href="/admin/{{$.Type}}/edit/{{.ID}}?p={{$.Value}}">
+                <a class="editLink" style="padding-right:5px;" href="/admin/{{$.Type}}/edit/{{.ID}}">
 					<img src="/static/images/edit.png" alt='' />
 				</a>
             </div> 
         </div>
         {{end}}
     </div>
+	
 	<div class="pagination">
 		<span>​​​​​​​​​​​​​​​​​​​​​ទំព័រ </span>
-			<select bind:value onchange={paginate}> 
+			<select onchange="paginate({{.Type}}, event)"> 
 				{{ range .PageNumbers}}
 					{{if eq . $.PageNumber}}
 					<option selected>{{.}}</option>
@@ -42,16 +43,16 @@
 </footer>
 
 <style>
-    footer{
+    .Items{
 		margin-top: 0;
 	}
-	footer .items{
+	.Items .items{
 		display: grid;
 		grid-template-columns: calc(50% - 5px ) calc(50% - 5px );
 		grid-gap: 10px;
 		margin-top: 10px;
 	}
-	footer .items .item{
+	.Items .items .item{
 		background-color: lightgrey;
 		display: grid;
 		grid-template-columns: 130px auto;
@@ -59,15 +60,15 @@
 		align-items: center;
 		padding-right: 10px;
 	}
-	footer .items .item:hover{
+	.Items .items .item:hover{
 		grid-template-columns: 130px auto 85px;
 	}
-	footer .items .item .thumb{
+	.Items .items .item .thumb{
 		position: relative;
 		padding-top: 56.25%;
 		overflow: hidden;
 	}
-	footer .items .item .thumb img{
+	.Items .items .item .thumb img{
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -75,47 +76,47 @@
 		min-height: 100%;
 		float: left;
 	}
-	footer .items .item .thumb .play{
+	.Items .items .item .thumb .play{
 		width: 25%;
 		top: 50%;
     	left: 50%;
 		min-height: auto;
 		transform: translate(-50%,-50%);
 	}
-	footer .items .item .title{
+	.Items .items .item .title{
 		white-space: nowrap;
         overflow: hidden;
     	text-overflow: ellipsis;
 		
 	}
-	footer .items .item .edit{
+	.Items .items .item .edit{
     	text-align: right;
 		display: none;
 	}
-	footer .items .item .edit a{
+	.Items .items .item .edit a{
     	float: right;
 	}
-	footer .items .item .edit img{
+	.Items .items .item .edit img{
 		width: 40px;
 	}
-	footer .items .item .edit img:hover{
+	.Items .items .item .edit img:hover{
 		cursor: pointer;
 		opacity: .7;
 	}
-	footer .items .item:hover .edit{
+	.Items .items .item:hover .edit{
     	display: block;
 		grid-template-columns: auto auto;
 	}
-	footer .pagination{
+	.Items .pagination{
 		text-align: center;
 		margin: 20px;
 	}
 
     @media only screen and (max-width: 600px){
-        footer .items{
+        .Items .items{
             grid-template-columns: 100%;
         }
-        footer .items .item .edit img{
+        .Items .items .item .edit img{
 		    width: 35px;
 	    }
     }

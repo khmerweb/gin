@@ -9,15 +9,15 @@ func CreateRootUser() {
 	mydb := Connect()
 	sql := `INSERT INTO User VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 	id := uuid.New()
-	title := "Sokhavuth"
-	email := "sokhavuth@khmerweb.app"
-	passwordbyte := []byte("***********")
+	title := "Guest"
+	email := "guest@khmerweb.app"
+	passwordbyte := []byte("********")
 	hashedPassword, err := bcrypt.GenerateFromPassword(passwordbyte, bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
 	}
 	password := string(hashedPassword)
-	role := "Admin"
+	role := "Author"
 	thumb := ""
 	content := ""
 	date := ""

@@ -4,6 +4,7 @@ package post
 import (
 	"gin/db"
 	"gin/settings"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -47,7 +48,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"PostCount":       count,
 			"Items":           posts,
 			"Type":            "post",
-			"Value":           1,
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      1,
 		})
@@ -78,7 +78,10 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			pageNumbers = append(pageNumbers, i+1)
 		}
 		dashboard := settings.Setup().Dashboard
-		posts := db.GetPosts(dashboard)
+		page, _ := c.GetQuery("p")
+		pageInt, _ := strconv.Atoi(page)
+		posts := db.PaginatePosts(c, dashboard, pageInt)
+
 		c.HTML(200, "admin-edit", gin.H{
 			"Title":           "ទំព័រ​កែប្រែការផ្សាយ",
 			"UserName":        userName,
@@ -89,9 +92,19 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"PostCount":       count,
 			"Items":           posts,
 			"Type":            "post",
-			"Value":           "pageNumber",
 			"PageNumbers":     pageNumbers,
-			"PageNumber":      1,
+			"PageNumber":      pageInt,
 		})
+	})
+
+	router.POST("/edit/:id", func(c *gin.Context) {
+		db.UpdatePost(c)
+		c.Redirect(302, "/admin/post/edit/"+c.Param("id"))
+	})
+
+	router.GET("/paginate/:page", func(c *gin.Context) {
+		dashboard := settings.Setup().Dashboard
+		posts := db.PaginatePosts(c, dashboard, 0)
+		c.JSON(200, gin.H{"items": posts})
 	})
 }
