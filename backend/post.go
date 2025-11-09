@@ -1,5 +1,5 @@
 // backend/post/post.go
-package post
+package backend
 
 import (
 	"gin/db"
@@ -23,7 +23,7 @@ type Post struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
-func RegisterRoutes(router *gin.RouterGroup) {
+func RegisterRoutesPost(router *gin.RouterGroup) {
 
 	router.GET("/", func(c *gin.Context) {
 		userName, _ := c.Get("userName")
@@ -33,11 +33,11 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountPosts()
 		pageNumbers := make([]int, 0)
-		pageCount := (count + 10 - 1) / 10
+		dashboard := settings.Setup().Dashboard
+		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		dashboard := settings.Setup().Dashboard
 		posts := db.GetPosts(dashboard)
 		c.HTML(200, "admin", gin.H{
 			"Title":           "ទំព័រ​ការផ្សាយ",
@@ -45,7 +45,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"SuccessMessages": successFlashes,
 			"ErrorMessages":   errorFlashes,
 			"Route":           "ការផ្សាយ",
-			"PostCount":       count,
+			"ItemsCount":      count,
 			"Items":           posts,
 			"Type":            "post",
 			"PageNumbers":     pageNumbers,
@@ -72,12 +72,12 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountPosts()
 		post := db.GetPost(c.Param("id"))
+		dashboard := settings.Setup().Dashboard
 		pageNumbers := make([]int, 0)
-		pageCount := (count + 10 - 1) / 10
+		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		dashboard := settings.Setup().Dashboard
 		page, _ := c.GetQuery("p")
 		pageInt, _ := strconv.Atoi(page)
 		posts := db.PaginatePosts(c, dashboard, pageInt)
@@ -89,7 +89,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"SuccessMessages": successFlashes,
 			"ErrorMessages":   errorFlashes,
 			"Route":           "ការផ្សាយ",
-			"PostCount":       count,
+			"ItemsCount":      count,
 			"Items":           posts,
 			"Type":            "post",
 			"PageNumbers":     pageNumbers,

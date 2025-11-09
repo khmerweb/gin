@@ -3,8 +3,6 @@
 package backend
 
 import (
-	"gin/backend/post"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +24,7 @@ func AuthRequired() gin.HandlerFunc {
 }
 
 func RegisterRoutes(router *gin.RouterGroup) {
+
 	router.Use(AuthRequired())
 
 	router.GET("/", func(c *gin.Context) {
@@ -42,6 +41,10 @@ func RegisterRoutes(router *gin.RouterGroup) {
 
 	postRoute := router.Group("/post")
 	postGroup := postRoute.Group("/")
-	post.RegisterRoutes(postGroup)
+	RegisterRoutesPost(postGroup)
+
+	categoryRoute := router.Group("/category")
+	categoryGroup := categoryRoute.Group("/")
+	RegisterRoutesCategory(categoryGroup)
 
 }

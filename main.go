@@ -7,63 +7,24 @@ import (
 	"gin/backend"
 	"gin/frontend"
 	"gin/login"
-	"html/template"
+	"gin/templates"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-func formatDate(layout string, dateString string) (string, error) {
-	t, err := time.Parse("2006-01-02T15:04:05", dateString)
-	if err != nil {
-		return "", err
-	}
-	return t.Format(layout), nil
-}
-
-func createMyRender() multitemplate.Renderer {
-	r := multitemplate.NewRenderer()
-	funcMap := template.FuncMap{
-		"formatDate": formatDate,
-	}
-	r.AddFromFilesFuncs("home", funcMap,
-		"templates/layouts/base.html",
-		"templates/pages/home.html",
-		"templates/partials/footer.html",
-	)
-	r.AddFromFilesFuncs("admin", funcMap,
-		"templates/layouts/baseAdmin.html",
-		"templates/pages/admin.html",
-		"templates/partials/headerAdmin.html",
-		"templates/partials/footer.html",
-		"templates/partials/menuAdmin.html",
-		"templates/partials/items.html",
-	)
-	r.AddFromFilesFuncs("admin-edit", funcMap,
-		"templates/layouts/baseAdmin.html",
-		"templates/pages/admin-edit.html",
-		"templates/partials/headerAdmin.html",
-		"templates/partials/footer.html",
-		"templates/partials/menuAdmin.html",
-		"templates/partials/items.html",
-	)
-	r.AddFromFiles("login", "templates/pages/login.html")
-	return r
-}
-
 func Handler(w http.ResponseWriter, r *http.Request) {
 	gin.SetMode(gin.ReleaseMode)
 	var router = gin.Default()
 	router.Static("/static", "./public/static")
-	router.HTMLRender = createMyRender()
+	router.HTMLRender = templates.CreateMyRender()
 	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
 	store.Options(sessions.Options{MaxAge: 0, Path: "/"})
 	router.Use(sessions.Sessions("mysession", store))
@@ -109,7 +70,7 @@ func main() {
 	store := cookie.NewStore([]byte(os.Getenv("SECRET_KEY")))
 	store.Options(sessions.Options{MaxAge: 0, Path: "/"})
 	router.Use(sessions.Sessions("mysession", store))
-	router.HTMLRender = createMyRender()
+	router.HTMLRender = templates.CreateMyRender()
 	router.Use(cors.Default())
 
 	front := router.Group("/")

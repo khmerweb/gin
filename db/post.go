@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -85,20 +84,18 @@ func CreatePost(c *gin.Context) {
 		return
 	}
 
-	id := uuid.New()
-	title := c.PostForm("title")
-	content := c.PostForm("content")
-	categories := c.PostForm("categories")
-	thumb := c.PostForm("thumb")
-	date := c.PostForm("date")
-	videos := c.PostForm("videos")
+	post.ID = uuid.New().String()
 	userId, _ := c.Get("userId")
-	author := userId.(string)
-	created_at := time.Now().Format("2006-01-02T15:04:05")
-	updated_at := time.Now().Format("2006-01-02T15:04:05")
+	post.Author = userId.(string)
 
-	sql := `INSERT INTO Post VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-	mydb.Exec(sql, id, title, content, categories, thumb, date, videos, author, created_at, updated_at)
+	sql := `INSERT INTO Post (id, title, content, categories, thumb, date, videos, author) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+	_, err := mydb.Exec(sql, post.ID, post.Title, post.Content, post.Categories, post.Thumb, post.Date, post.Videos, post.Author)
+	if err != nil {
+		session.AddFlash("មាន​បញ្ហា​ក្នុង​ការបង្កើត​ការផ្សាយ!", "error")
+		session.Save()
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
 	defer mydb.Close()
 	session.AddFlash("ការផ្សាយ​ត្រូវ​បាន​បង្កើត​ឡើងដោយ​ជោគជ័យ!", "success")
 	session.Save()
@@ -181,13 +178,19 @@ func UpdatePost(c *gin.Context) {
 	mydb := Connect()
 	defer mydb.Close()
 	session := sessions.Default(c)
-
-	title := c.PostForm("title")
-	content := c.PostForm("content")
-	categories := c.PostForm("categories")
-	thumb := c.PostForm("thumb")
-	date := c.PostForm("date")
-	videos := c.PostForm("videos")
+	post := Post{}
+	if err := c.ShouldBind(&post); err != nil {
+		session.AddFlash("មាន​បញ្ហា​ក្នុង​ការកែប្រែ​ការផ្សាយ!", "error")
+		session.Save()
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	title := post.Title
+	content := post.Content
+	categories := post.Categories
+	thumb := post.Thumb
+	date := post.Date
+	videos := post.Videos
 	postID := c.Param("id")
 	userRole, _ := c.Get("userRole")
 	mysql := `UPDATE Post SET title = ?, content = ?, categories = ?, thumb = ?, date = ?, videos = ? WHERE id = ?`
