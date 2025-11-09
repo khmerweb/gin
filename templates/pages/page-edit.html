@@ -1,0 +1,47 @@
+{{template "admin.html" .}}
+
+{{define "pageTitle"}}
+    ទំព័រ​ស្តាទិក
+{{end}}
+
+{{define "editor"}}
+<div class="Editor">
+    <form action="/admin/page/edit/{{.Page.ID}}?p={{.PageNumber}}" method="post">
+        <input type="text" name="title" value="{{.Page.Title}}" required placeholder="ចំណងជើង" />
+        <div class="wrapper">
+            <textarea name="content" id="editor">{{.Page.Content}}</textarea>
+        </div>
+        <div class="wrapper2">
+            <input type="text" name="thumb" value="{{.Page.Thumb}}" required placeholder="រូប​​តំណាង" />
+            <input type="datetime-local" step="1" name="date" value="{{.Page.Date}}" required />
+            <input type="submit" value="ចុះ​ផ្សាយ" />
+        </div>
+        <input type="hidden" name="videos" value="" />
+        <script src="/static/scripts/ckeditor/config-page.js"></script>
+    </form>
+</div>
+
+<style>
+    
+    .Editor{
+        background-color: white;
+        height: 100%;
+        position: relative;
+    } 
+    .Editor .wrapper{
+        height: 350px;
+    }
+    .Editor input{
+        width: 100%;
+        font: var(--body-font);
+        padding: 3px 5px;
+    }
+    .Editor .wrapper2{
+        width: 100%;
+        display: grid;
+        grid-template-columns: 45% auto 15%;
+        position: absolute;
+        bottom: 0;
+    }
+</style>
+{{end}}

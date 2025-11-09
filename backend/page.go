@@ -9,15 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Category struct {
+type Page struct {
 	ID        string `json:"id"`
 	Title     string `json:"title" form:"title" binding:"required"`
+	Content   string `json:"content" form:"content"`
 	Thumb     string `json:"thumb" form:"thumb" binding:"required"`
 	Date      string `json:"date" form:"date" binding:"required"`
 	UpdatedAt string `json:"updated_at"`
 }
 
-func RegisterRoutesCategory(router *gin.RouterGroup) {
+func RegisterRoutesPage(router *gin.RouterGroup) {
 
 	router.GET("/", func(c *gin.Context) {
 		userName, _ := c.Get("userName")
@@ -25,31 +26,32 @@ func RegisterRoutesCategory(router *gin.RouterGroup) {
 		successFlashes := session.Flashes("success")
 		errorFlashes := session.Flashes("error")
 		session.Save()
-		count := db.CountCategories()
+
+		count := db.CountPages()
 		dashboard := settings.Setup().Dashboard
 		pageNumbers := make([]int, 0)
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		categories := db.GetCategories(dashboard)
-		c.HTML(200, "category", gin.H{
-			"Title":           "ទំព័រ​ជំពូក",
+		pages := db.GetPages(dashboard)
+		c.HTML(200, "page", gin.H{
+			"Title":           "ទំព័រ​ស្តាទិក",
 			"UserName":        userName,
 			"SuccessMessages": successFlashes,
 			"ErrorMessages":   errorFlashes,
-			"Route":           "ជំពូក",
+			"Route":           "ទំព័រ​ស្តាទិក",
 			"ItemsCount":      count,
-			"Items":           categories,
-			"Type":            "category",
+			"Items":           pages,
+			"Type":            "page",
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      1,
 		})
 	})
 
 	router.POST("/", func(c *gin.Context) {
-		db.CreateCategory(c)
-		c.Redirect(302, "/admin/category")
+		db.CreatePage(c)
+		c.Redirect(302, "/admin/page")
 	})
 
 	router.GET("/edit/:id", func(c *gin.Context) {
@@ -58,48 +60,43 @@ func RegisterRoutesCategory(router *gin.RouterGroup) {
 		successFlashes := session.Flashes("success")
 		errorFlashes := session.Flashes("error")
 		session.Save()
-		count := db.CountCategories()
-		category := db.GetCategory(c.Param("id"))
+		count := db.CountPages()
+		page := db.GetPage(c.Param("id"))
 		dashboard := settings.Setup().Dashboard
 		pageNumbers := make([]int, 0)
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		page, _ := c.GetQuery("p")
-		pageInt, _ := strconv.Atoi(page)
-		categories := db.PaginateCategories(c, dashboard, pageInt)
+		pageStr, _ := c.GetQuery("p")
+		pageInt, _ := strconv.Atoi(pageStr)
+		pages := db.PaginatePages(c, dashboard, pageInt)
 
-		c.HTML(200, "category-edit", gin.H{
-			"Title":           "ទំព័រ​កែប្រែជំពូក",
+		c.HTML(200, "page-edit", gin.H{
+			"Title":           "កែប្រែទំព័រ​ស្តាទិក",
 			"UserName":        userName,
-			"Category":        category,
+			"Page":            page,
 			"SuccessMessages": successFlashes,
 			"ErrorMessages":   errorFlashes,
-			"Route":           "ជំពូក",
+			"Route":           "ទំព័រ​ស្តាទិក",
 			"ItemsCount":      count,
-			"Items":           categories,
-			"Type":            "category",
+			"Items":           pages,
+			"Type":            "page",
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      pageInt,
 		})
 	})
 
 	router.POST("/edit/:id", func(c *gin.Context) {
-		db.UpdateCategory(c)
+		db.UpdatePage(c)
 		page, _ := c.GetQuery("p")
-		c.Redirect(302, "/admin/category/edit/"+c.Param("id")+"?p="+page)
-	})
-
-	router.GET("/delete/:id", func(c *gin.Context) {
-		db.DeleteCategory(c)
-		c.Redirect(302, "/admin/category")
+		c.Redirect(302, "/admin/page/edit/"+c.Param("id")+"?p="+page)
 	})
 
 	router.GET("/paginate/:page", func(c *gin.Context) {
 		dashboard := settings.Setup().Dashboard
-		categories := db.PaginateCategories(c, dashboard, 0)
-		c.JSON(200, gin.H{"items": categories})
+		pages := db.PaginatePages(c, dashboard, 0)
+		c.JSON(200, gin.H{"items": pages})
 	})
 
 }

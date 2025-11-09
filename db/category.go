@@ -59,10 +59,18 @@ func CountCategories() int {
 }
 
 func CreateCategory(c *gin.Context) {
+	userRole, _ := c.Get("userRole")
+	session := sessions.Default(c)
+	if userRole != "Admin" {
+		session.AddFlash("អ្នក​គ្មាន​សិទ្ធិ​បង្កើតជំពូក​ទេ!", "error")
+		session.Save()
+		return
+	}
+
 	mydb := Connect()
 	defer mydb.Close()
 	var category Category
-	session := sessions.Default(c)
+
 	if err := c.ShouldBind(&category); err != nil {
 		session.AddFlash("ការបង្កើត​ជំពូក​មាន​បញ្ហា!: "+err.Error(), "error")
 		session.Save()
@@ -80,6 +88,7 @@ func CreateCategory(c *gin.Context) {
 
 	session.AddFlash("ជំពូក​ត្រូវ​បាន​បង្កើត​ដោយ​ជោគជ័យ!", "success")
 	session.Save()
+
 }
 
 func GetCategories(limit int) []Category {
@@ -153,9 +162,16 @@ func PaginateCategories(c *gin.Context, limit int, query int) []Category {
 }
 
 func UpdateCategory(c *gin.Context) {
+	userRole, _ := c.Get("userRole")
+	session := sessions.Default(c)
+	if userRole != "Admin" {
+		session.AddFlash("អ្នក​គ្មាន​សិទ្ធិកែប្រែ​ជំពូក​ទេ!", "error")
+		session.Save()
+		return
+	}
+
 	mydb := Connect()
 	defer mydb.Close()
-	session := sessions.Default(c)
 	var category Category
 	if err := c.ShouldBind(&category); err != nil {
 		session.AddFlash("ការកែប្រែ​ជំពូក​មាន​បញ្ហា!: "+err.Error(), "error")
@@ -172,4 +188,31 @@ func UpdateCategory(c *gin.Context) {
 	}
 	session.AddFlash("ជំពូក​ត្រូវ​បាន​កែប្រែ​ដោយ​ជោគជ័យ!", "success")
 	session.Save()
+}
+
+func DeleteCategory(c *gin.Context) {
+	userRole, _ := c.Get("userRole")
+	session := sessions.Default(c)
+	if userRole != "Admin" {
+		session.AddFlash("អ្នក​គ្មាន​សិទ្ធិ​លុប​ជំពូក​ទេ!", "error")
+		session.Save()
+		return
+	}
+
+	mydb := Connect()
+	defer mydb.Close()
+	id := c.Param("id")
+
+	if userRole == "Admin" {
+		mysql := `DELETE FROM Category WHERE id = ?`
+		_, err := mydb.Exec(mysql, id)
+		if err != nil {
+			session.AddFlash("មាន​បញ្ហា​ក្នុង​ការលុបជំពូក!", "error")
+			session.Save()
+			fmt.Println("Error deleting post:", err)
+			return
+		}
+		session.AddFlash("ជំពូក​ត្រូវ​បាន​លុប​ដោយជោគជ័យ!", "success")
+		session.Save()
+	}
 }

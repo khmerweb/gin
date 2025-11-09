@@ -19,12 +19,12 @@ func AuthRequired() gin.HandlerFunc {
 
 		c.Set("userName", userName)
 		c.Set("userId", session.Get("userId"))
+		c.Set("userRole", session.Get("userRole"))
 		c.Next()
 	}
 }
 
 func RegisterRoutes(router *gin.RouterGroup) {
-
 	router.Use(AuthRequired())
 
 	router.GET("/", func(c *gin.Context) {
@@ -46,5 +46,9 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	categoryRoute := router.Group("/category")
 	categoryGroup := categoryRoute.Group("/")
 	RegisterRoutesCategory(categoryGroup)
+
+	pageRoute := router.Group("/page")
+	pageGroup := pageRoute.Group("/")
+	RegisterRoutesPage(pageGroup)
 
 }

@@ -15,7 +15,7 @@ func Setup() Settings {
 	settings := Settings{
 		SiteTitle:   "ដំណឹង​ល្អ",
 		Description: "description",
-		Dashboard:   10,
+		Dashboard:   2,
 		Frontend:    20,
 		Categories:  20,
 		Playlist:    20,
