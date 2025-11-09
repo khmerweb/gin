@@ -86,5 +86,35 @@ func CreateMyRender() multitemplate.Renderer {
 		"templates/partials/items.html",
 	)
 
+	router.AddFromFilesFuncs("upload", funcMap,
+		"templates/layouts/baseAdmin.html",
+		"templates/pages/admin.html",
+		"templates/pages/upload.html",
+		"templates/partials/headerAdmin.html",
+		"templates/partials/footer.html",
+		"templates/partials/menuAdmin.html",
+		"templates/partials/items.html",
+	)
+
+	router.AddFromFilesFuncs("user", funcMap,
+		"templates/layouts/baseAdmin.html",
+		"templates/pages/admin.html",
+		"templates/pages/user.html",
+		"templates/partials/headerAdmin.html",
+		"templates/partials/footer.html",
+		"templates/partials/menuAdmin.html",
+		"templates/partials/items.html",
+	)
+
+	router.AddFromFilesFuncs("user-edit", funcMap,
+		"templates/layouts/baseAdmin.html",
+		"templates/pages/admin.html",
+		"templates/pages/user-edit.html",
+		"templates/partials/headerAdmin.html",
+		"templates/partials/footer.html",
+		"templates/partials/menuAdmin.html",
+		"templates/partials/items.html",
+	)
+
 	return router
 }

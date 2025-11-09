@@ -9,14 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Category struct {
-	ID        string `json:"id"`
-	Title     string `json:"title" form:"title" binding:"required"`
-	Thumb     string `json:"thumb" form:"thumb" binding:"required"`
-	Date      string `json:"date" form:"date" binding:"required"`
-	UpdatedAt string `json:"updated_at"`
-}
-
 func RegisterRoutesCategory(router *gin.RouterGroup) {
 
 	router.GET("/", func(c *gin.Context) {

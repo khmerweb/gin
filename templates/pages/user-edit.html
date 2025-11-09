@@ -1,0 +1,62 @@
+{{template "admin.html" .}}
+
+{{define "pageTitle"}}
+    ទំព័រ​អ្នក​និពន្ធ
+{{end}}
+
+{{define "editor"}}
+<div class="Editor">
+    <form action="/admin/user/edit/{{.User.ID}}?p={{.PageNumber}}" method="post">
+        <input type="text" name="title" value="{{.User.Title}}" requried placeholder="ឈ្មោះ" />
+        <div class="wrapper">
+            <textarea name="content" id="editor">{{.User.Content}}</textarea>
+        </div>
+        <div class="wrapper2">
+            <select name="role" required >
+                {{ range .Options }}
+                <option value="{{ . }}" {{ if eq . $.Selected }}selected="selected"{{ end }}>
+                    {{ . }}
+                </option>
+                {{ end }}
+            </select>
+            <input type="email" name="email" value="{{.User.Email}}" required placeholder="Email" />
+            <input type="password" name="password" value="{{.User.Password}}" required />
+            <input type="text" name="thumb" value="{{.User.Thumb}}" required placeholder="រូប​​តំណាង" />
+            <input type="datetime-local" step="1" name="date" value="{{.User.Date}}" required />
+            <input type="submit" value="បញ្ចូល" />
+        </div>
+            <input type="hidden" name="videos" value="" />
+            <script src="/static/scripts/ckeditor/config-user.js"></script>
+            
+    </form>
+</div>
+
+<style>
+    .Editor{
+        background-color: white;
+        height: 100%;
+        position: relative;
+    } 
+    .Editor .wrapper{
+        height: 350px;
+    }
+    .Editor input{
+        width: 100%;
+        font: var(--body-font);
+        padding: 3px 5px;
+    }
+    .Editor .wrapper2{
+        display: grid;
+        grid-template-columns: 9% auto auto auto 23% 10%;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    @media only screen and (max-width: 600px){
+        .Editor .frame{
+            grid-template-columns: 100%
+        }
+    }
+</style>
+{{end}}

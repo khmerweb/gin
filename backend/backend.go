@@ -51,4 +51,12 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	pageGroup := pageRoute.Group("/")
 	RegisterRoutesPage(pageGroup)
 
+	uploadRoute := router.Group("/upload")
+	uploadGroup := uploadRoute.Group("/")
+	RegisterRoutesUpload(uploadGroup)
+
+	userRoute := router.Group("/user")
+	userGroup := userRoute.Group("/")
+	RegisterRoutesUser(userGroup)
+
 }
