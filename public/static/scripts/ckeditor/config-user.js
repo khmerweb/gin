@@ -41,7 +41,7 @@ ClassicEditor
           ckeditor = editor
           editor.editing.view.focus()
           editor.editing.view.change(writer=>{
-              writer.setStyle('height', '329px', editor.editing.view.document.getRoot())
+              writer.setStyle('height', '328px', editor.editing.view.document.getRoot())
           })
         })
         .catch( err => {

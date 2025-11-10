@@ -7,7 +7,7 @@
 {{define "editor"}}
 <div class="Editor">
     <form action="/admin/user/edit/{{.User.ID}}?p={{.PageNumber}}" method="post">
-        <input type="text" name="title" value="{{.User.Title}}" requried placeholder="ឈ្មោះ" />
+        <input type="text" name="title" value="{{.User.Title}}" required placeholder="ឈ្មោះ" />
         <div class="wrapper">
             <textarea name="content" id="editor">{{.User.Content}}</textarea>
         </div>
