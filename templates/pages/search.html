@@ -1,0 +1,119 @@
+{{template "admin.html" .}}
+
+{{define "pageTitle"}}
+    ទំព័រ​ស្វែង​រក
+{{end}}
+
+{{define "editor"}}
+<section class="Search">
+    <div class="info">​លទ្ធផល​នៃ​ការស្វែង​រកៈ</div>
+    <div class="items">
+        {{range .SearchPosts}} 
+        <div class="item">
+            <a class="thumb" href="/{{$.Type}}/{{.ID}}">
+                <img src="{{.Thumb}}" alt='' />
+                {{if ne .Videos ""}}
+                <img class="play" src="/static/images/play.png" alt='' />
+                {{end}}
+            </a>
+            <div class="title">
+                <a href="/{{$.Type}}/{{.ID}}">{{.Title}}</a>
+                <div>{{formatDate "02-01-2006" .Date}}</div>
+            </div>
+            <div class="edit">
+				<a href="/admin/{{$.Type}}/delete/{{.ID}}" onclick="return confirm('Are you sure you want to delete this item?');">
+					<img src="/static/images/delete.png" alt=''/>
+				</a>
+                <a class="editLink" style="padding-right:5px;" href="/admin/{{$.Type}}/edit/{{.ID}}">
+					<img src="/static/images/edit.png" alt='' />
+				</a>
+            </div> 
+        </div>
+        {{end}}
+    </div>
+    <input type="hidden" name="videos" value="" />
+</section>
+<style>
+.Search .info{
+    background: lightgray;
+    padding: 5px 10px;
+    text-align: center; 
+}
+.Search{
+	margin-top: 0;
+}
+.Search .items{
+	display: grid;
+	grid-template-columns: calc(50% - 5px ) calc(50% - 5px );
+	grid-gap: 10px;
+	margin-top: 10px;
+}
+.Search .items .item{
+	background-color: lightgrey;
+	display: grid;
+	grid-template-columns: 130px auto;
+	grid-gap: 10px;
+	align-items: center;
+	padding-right: 10px;
+}
+.Search .items .item:hover{
+	grid-template-columns: 130px auto 85px;
+}
+.Search .items .item .thumb{
+	position: relative;
+	padding-top: 56.25%;
+	overflow: hidden;
+}	
+.Search .items .item .thumb img{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 100%;
+	float: left;
+}
+.Search .items .item .thumb .play{
+	width: 25%;
+	top: 50%;
+    left: 50%;
+	min-height: auto;
+	transform: translate(-50%,-50%);	
+}
+.Search .items .item .title{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.Search .items .item .edit{
+    text-align: right;
+	display: none;
+}
+.Search .items .item .edit a{
+    float: right;
+}
+.Search .items .item .edit img{
+	width: 40px;
+}
+.Search .items .item .edit img:hover{
+	cursor: pointer;
+	opacity: .7;
+}
+.Search .items .item:hover .edit{
+    display: block;
+	grid-template-columns: auto auto;
+}
+.Search .pagination{
+	text-align: center;
+	margin: 20px;
+}
+
+@media only screen and (max-width: 600px){
+    .Search .items{
+        grid-template-columns: 100%;
+    }
+    .Search .items .item .edit img{
+		width: 35px;
+	}
+}
+</style>
+{{end}}

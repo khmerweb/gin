@@ -63,4 +63,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	settingGroup := settingRoute.Group("/")
 	RegisterRoutesSetting(settingGroup)
 
+	searchRoute := router.Group("/search")
+	searchGroup := searchRoute.Group("/")
+	RegisterRoutesSearch(searchGroup)
+
 }

@@ -255,3 +255,29 @@ func PaginatePosts(c *gin.Context, dashboard int, query int) []Post {
 	}
 	return posts
 }
+
+func SearchPosts(q string, limit int) []Post {
+	mydb := Connect()
+	defer mydb.Close()
+
+	mysql := `SELECT * FROM Post WHERE title LIKE "%` + q + `%" ORDER BY date DESC LIMIT ?`
+
+	rows, err := mydb.Query(mysql, limit)
+	if err != nil {
+		fmt.Println("Error querying database:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		post := &Post{}
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			continue
+		}
+		posts = append(posts, *post)
+	}
+	return posts
+}

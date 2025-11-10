@@ -1,9 +1,9 @@
 <section class="Header">
     <div class="inner region">
         <a href="/admin" class="logo"><img src="/static/images/Go.png" /></a>
-        <form method="POST">
-            <input type="text" placeholder="Search" />
-            <input type="button" value="ស្វែងរក" />
+        <form method="POST" action="/admin/search">
+            <input type="text" name="q" placeholder="Search" />
+            <input type="submit" value="ស្វែងរក" />
         </form>
         <div class="login">
             <a>{{.UserName}}</a> | 
