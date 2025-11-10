@@ -2,7 +2,6 @@ package backend
 
 import (
 	"gin/db"
-	"gin/settings"
 	"strconv"
 
 	"github.com/gin-contrib/sessions"
@@ -18,7 +17,7 @@ func RegisterRoutesUser(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountUsers()
 		pageNumbers := make([]int, 0)
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
@@ -44,7 +43,7 @@ func RegisterRoutesUser(router *gin.RouterGroup) {
 	})
 
 	router.GET("/paginate/:page", func(c *gin.Context) {
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		users := db.PaginateUsers(c, dashboard, 0)
 		c.JSON(200, gin.H{"items": users})
 	})
@@ -65,7 +64,7 @@ func RegisterRoutesUser(router *gin.RouterGroup) {
 		user := db.GetUser(c.Param("id"))
 		options := []string{"Author", "Editor", "Admin"}
 		selected := user.Role
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		pageNumbers := make([]int, 0)
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {

@@ -1,0 +1,45 @@
+{{template "admin.html" .}}
+
+{{define "pageTitle"}}
+    ទំព័រ​ Setting
+{{end}}
+
+{{define "editor"}}
+<section class="category" slot="editor">
+    <form method="post" action="/admin/setting" >
+        <span>ចំណងជើងៈ</span><input type="text" name="title" required />
+        <span>គេហទំព័រៈ</span><input type="text" name="siteTitle" required />
+        <span>ខ្លឹមសារៈ</span><input type="text" name="description" />
+        <span>ទំព័រ​ក្នុងៈ</span><input type="number" name="dashboard" required />
+        <span>ទំព័រ​​មុខៈ</span><input type="number" name="frontend" required />
+        <span>ទំព័រ​ជំពូកៈ</span><input type="number" name="categories" required />
+        <span>កំរង​វីដេអូៈ</span><input type="number" name="playlist" required />
+        <span>រូប​តំណាងៈ</span><input type="text" name="thumb" required />
+        <span>ពេល​បង្កើតៈ</span><input type="datetime-local" step="1" name="date" required />
+        <span></span><input type="submit" value="បញ្ជូន" />
+        <input type="hidden" name="videos" value="" />
+    </form>
+</section>
+<style>
+    .category{
+        padding: 20px;
+        background: lightgray;
+        height: 100%;
+    }
+    .category form{
+        display: grid;
+        grid-template-columns: 80px 300px;
+        grid-gap: 5px 2px;
+        align-items: center;
+    }
+    .category form span{
+        text-align: right;
+        color: black;
+    }
+    .category form input{
+        font: var(--body-font);
+        padding: 2px 5px
+    }
+    
+</style>
+{{end}}

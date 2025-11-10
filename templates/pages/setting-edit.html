@@ -1,0 +1,45 @@
+{{template "admin.html" .}}
+
+{{define "pageTitle"}}
+    ទំព័រ​ Setting
+{{end}}
+
+{{define "editor"}}
+<section class="category" slot="editor">
+    <form method="post" action="/admin/setting/edit/{{.Setting.ID}}?p={{.PageNumber}}" >
+        <span>ចំណងជើងៈ</span><input type="text" name="title" value="{{.Setting.Title}}" required />
+        <span>គេហទំព័រៈ</span><input type="text" name="siteTitle" value="{{.Setting.SiteTitle}}" required />
+        <span>ខ្លឹមសារៈ</span><input type="text" name="description" value="{{.Setting.Description}}" />
+        <span>ទំព័រ​ក្នុងៈ</span><input type="number" name="dashboard" value="{{.Setting.Dashboard}}" required />
+        <span>ទំព័រ​​មុខៈ</span><input type="number" name="frontend" value="{{.Setting.Frontend}}" required />
+        <span>ទំព័រ​ជំពូកៈ</span><input type="number" name="categories" value="{{.Setting.Categories}}" required />
+        <span>កំរង​វីដេអូៈ</span><input type="number" name="playlist" value="{{.Setting.Playlist}}" required />
+        <span>រូប​តំណាងៈ</span><input type="text" name="thumb" value="{{.Setting.Thumb}}" required />
+        <span>ពេល​បង្កើតៈ</span><input type="datetime-local" step="1" name="date" value="{{.Setting.Date}}" required />
+        <span></span><input type="submit" value="បញ្ជូន" />
+        <input type="hidden" name="videos" value="" />
+    </form>
+</section>
+<style>
+    .category{
+        padding: 20px;
+        background: lightgray;
+        height: 100%;
+    }
+    .category form{
+        display: grid;
+        grid-template-columns: 80px 300px;
+        grid-gap: 5px 2px;
+        align-items: center;
+    }
+    .category form span{
+        text-align: right;
+        color: black;
+    }
+    .category form input{
+        font: var(--body-font);
+        padding: 2px 5px
+    }
+    
+</style>
+{{end}}

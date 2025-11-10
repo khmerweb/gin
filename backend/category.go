@@ -2,7 +2,6 @@ package backend
 
 import (
 	"gin/db"
-	"gin/settings"
 	"strconv"
 
 	"github.com/gin-contrib/sessions"
@@ -18,7 +17,7 @@ func RegisterRoutesCategory(router *gin.RouterGroup) {
 		errorFlashes := session.Flashes("error")
 		session.Save()
 		count := db.CountCategories()
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		pageNumbers := make([]int, 0)
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
@@ -52,7 +51,7 @@ func RegisterRoutesCategory(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountCategories()
 		category := db.GetCategory(c.Param("id"))
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		pageNumbers := make([]int, 0)
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
@@ -89,7 +88,7 @@ func RegisterRoutesCategory(router *gin.RouterGroup) {
 	})
 
 	router.GET("/paginate/:page", func(c *gin.Context) {
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		categories := db.PaginateCategories(c, dashboard, 0)
 		c.JSON(200, gin.H{"items": categories})
 	})
