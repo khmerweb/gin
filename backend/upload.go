@@ -1,8 +1,6 @@
 package backend
 
 import (
-	"gin/settings"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +10,7 @@ func RegisterRoutesUpload(router *gin.RouterGroup) {
 
 		count := 1
 		pageNumbers := make([]int, 0)
-		dashboard := settings.Setup().Dashboard
+		dashboard := Setup().Dashboard
 		pageCount := (count + dashboard - 1) / dashboard
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)

@@ -3,8 +3,6 @@
 package backend
 
 import (
-	"gin/settings"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -63,6 +61,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 
 	settingRoute := router.Group("/setting")
 	settingGroup := settingRoute.Group("/")
-	settings.RegisterRoutesSetting(settingGroup)
+	RegisterRoutesSetting(settingGroup)
 
 }
