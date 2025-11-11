@@ -24,7 +24,11 @@ func CreateMyRender() multitemplate.Renderer {
 
 	router.AddFromFilesFuncs("home", funcMap,
 		"templates/layouts/base.html",
+		"templates/partials/header.html",
+		"templates/partials/menu.html",
 		"templates/pages/home.html",
+		"templates/partials/player.html",
+		"templates/partials/ad.html",
 		"templates/partials/footer.html",
 	)
 

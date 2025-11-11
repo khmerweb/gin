@@ -1,0 +1,162 @@
+<script src="https://www.youtube.com/iframe_api"></script>
+{{template "ad.html" .}}
+<section class="main region">
+    <div class="feature-post">
+        <div class="random-video">
+            <button  onclick="changeCategory(videoPlaylists.movie, 'ភាពយន្ត​​​', rawPlaylist.movie, 1)">
+                <img src="{playlistThumbs.movie}" />
+                <p class="news-label">data.counts.movie ភាពយន្ត</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.travel, 'ដើរ​លេង​​​​​', rawPlaylist.travel, 2)">
+                <img src="playlistThumbs.travel" />
+                <p class="movies-label">data.counts.travel ដើរ​លេង</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.simulation, '​ពិភព​និម្មិត​', rawPlaylist.simulation, 3)">
+                <img src="{playlistThumbs.simulation}" />
+                <p class="movies-label">data.counts.simulation ពិភព​និម្មិត</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.sport, '​កីឡា​​​', rawPlaylist.sport, 4)">
+                <img src="{playlistThumbs.sport}" />
+                <p class="movies-label">data.counts.sport កីឡា</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.documentary, '​ឯកសារ​​​​​', rawPlaylist.documentary, 5)">
+                <img src="{playlistThumbs.documentary}" />
+                <p class="movies-label">data.counts.documentary ​ឯកសារ</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.food, 'មុខ​ម្ហូប​​​​', rawPlaylist.food, 6)">
+                <img src="{playlistThumbs.food}" />
+                <p class="news-label">data.counts.food ​មុខ​ម្ហូប</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.music, 'របាំ​តន្ត្រី​​​​​', rawPlaylist.music, 7)">
+                <img src="{playlistThumbs.music}" />
+                <p class="news-label">data.counts.music របាំ​តន្ត្រី</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <button onclick="changeCategory(videoPlaylists.game, 'ល្បែងកំសាន្ត​​​​', rawPlaylist.game, 8)">
+                <img src="{playlistThumbs.game}" />
+                <p class="news-label">data.counts.game ល្បែងកំសាន្ត</p>
+                <span class='playing'>កំពុង​លេង...</span>
+            </button>
+            <div class="wrapper">
+                <div id="youtube-player"></div>
+                <div class="latest-video">ទំព័រ​ដើម</div>
+                <div class="channel-logo">
+                    <img src="/images/siteLogo.png" alt=''/>
+                </div>
+                <div class="play-all">
+                    <button onclick="changeCategory(videoPlaylists.home, 'ទំព័រ​ដើម', rawPlaylist.home)" class='center'>ទំព័រ​ដើម</button>
+                    <button onclick="changeCategory(videoPlaylists.news, 'ព័ត៌មាន', rawPlaylist.news)" class='center'>ព័ត៌មាន</button>
+                    <button onclick="nextPrevious('previous')">វីដេអូមុន</button>
+                    <button onclick="newPlaylist" class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
+                    <button onclick="nextPrevious('next')">វីដេអូបន្ទាប់</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{{template "ad.html" .}}
+
+<style>
+    .random-video{
+        display: grid;
+        grid-template-columns: calc(33.33% - 6.66px) calc(33.33% - 6.66px) calc(33.33% - 6.66px);
+        grid-gap: 10px;
+        padding: 10px 0 0;
+    }
+    .random-video .wrapper{
+        grid-column: 2 / span 2;
+        grid-row: 2 / span 2;
+        position: relative;
+        padding-top: 53%;
+    }
+    .random-video button{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding-top: 53.4%;
+        border: none;
+        background: black;
+    }
+    .random-video button:hover{
+        cursor: pointer;
+        opacity: .7;
+    }
+    .random-video button img{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .random-video button p{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--background-dark);
+        color: white;
+        text-align: center;
+        font-family: Vidaloka, OdorMeanChey;
+        padding: 5px;
+        min-width: 90px;
+    }
+    .random-video button .playing{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: Vidaloka, OdorMeanChey;
+        color: orange;
+        display: none;
+    }
+    .random-video .latest-video{
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        color: orange;
+    }
+    .random-video .channel-logo img{
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 6%;
+    }
+    .random-video .wrapper .play-all{
+        position: relative;
+        bottom: 7px;
+        text-align: center;
+        visibility: hidden;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        gap: 15px;
+    }
+    .random-video .wrapper .play-all button{
+        color: orange;
+        padding-top: 0;
+        width: auto;
+        background-color: transparent;
+        font-family: Vidaloka, OdorMeanChey;
+        border: none;
+    }
+    .random-video .wrapper .play-all:hover{
+        cursor: pointer;
+    }
+    .random-video .wrapper:hover .play-all{
+        visibility: visible;
+    }
+    .random-video .wrapper #youtube-player{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+    }
+</style>

@@ -1,0 +1,87 @@
+<section class="Header">
+    <div class="inner region">
+        <div class="logo">
+            <div>
+                <a href="/"><img src="/static/images/siteLogo.png" /></a>
+                <span><a href="/">{{.SiteTitle}}</a></span>
+            </div>
+        </div>
+        <form method="POST" action="/frontend/search">
+            <input type="text" name="q" placeholder="Search" />
+            <input type="submit" value="ស្វែងរក" />
+        </form>
+        <div class="login">
+            <a href="/login">ចូល​ក្នុង</a> | 
+            <a href="/admin/user">ចុះ​ឈ្មោះ</a>
+        </div>
+    </div>
+<style>
+    .Header {
+        background: var(--background-dark);
+        color: white;
+    }
+    .Header .inner{
+        display: grid;
+        grid-template-columns: 25% auto 20%;
+        align-items: center;
+        padding: 5px 0;
+    }
+    .Header .inner .logo div {
+        display: grid;
+        grid-template-columns: 15% auto;
+        align-items: center;
+    }
+    .Header .inner .logo img {
+        width: 100%;
+        float: none;
+    }
+    .Header .inner .logo span a {
+        position: relative;
+        top: 5px;
+        color: white;
+        font: 30px/1.5 Limonf3;
+        padding-left: 5px;
+    }
+    .Header .inner form{
+        display: grid;
+        grid-template-columns: auto 20%;
+        align-items: center;
+    }
+    .Header .inner input{
+        font: var(--body-font);
+        padding: 2px 10px;
+        height: 30px;
+    }
+    .Header .inner .login{
+        text-align: right;
+    }
+    .Header .inner .login a{
+        color: white;
+    }
+
+    @media only screen and (max-width: 600px){
+        .Header .inner{
+            grid-template-columns: 100%;
+            text-align: center;
+            padding: 10px
+        }
+        .Header .inner .logo div {
+            grid-template-columns: 100%;
+            text-align: center;
+        }
+        .Header .inner .logo div img {
+            width: 50px;
+        }
+        .Header .inner form{
+            padding: 10px 0;
+        }
+        .Header .inner img{
+            float: none;
+            margin: 0 auto;
+        }
+        .Header .inner .login{
+            text-align: center;
+        }
+    }
+</style>
+</section>

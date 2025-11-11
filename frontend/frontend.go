@@ -1,13 +1,19 @@
 // frontend/frontend.go
 package frontend
 
-import "github.com/gin-gonic/gin"
+import (
+	"gin/backend"
+
+	"github.com/gin-gonic/gin"
+)
 
 func RegisterRoutes(router *gin.RouterGroup) {
 	router.GET("/", func(c *gin.Context) {
+		siteTitle := backend.Setup().SiteTitle
 		c.HTML(200, "home", gin.H{
-			"title":   "My Gin Website",
-			"message": "Welcome to the homepage!",
+			"Title":     "My Gin Website",
+			"SiteTitle": siteTitle,
+			"message":   "Welcome to the homepage!",
 		})
 	})
 	router.GET("/post/:id", func(c *gin.Context) {
