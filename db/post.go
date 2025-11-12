@@ -346,3 +346,41 @@ func CountPlaylists() string {
 	}
 	return string(jsonDataString)
 }
+
+func GetPlaylist(c *gin.Context, limit int, thumbs []string) []Post {
+	mydb := Connect()
+	defer mydb.Close()
+	category := c.Param("category")
+	mysql := `SELECT * FROM Post WHERE categories LIKE "%` + category + `%" AND thumb NOT IN (`
+	args := make([]interface{}, len(thumbs))
+	for i, v := range thumbs {
+		args[i] = v
+	}
+	for i := 0; i < len(thumbs); i++ {
+		mysql += "?"
+		if i < len(thumbs)-1 {
+			mysql += ","
+		}
+	}
+	mysql += ") ORDER BY random() LIMIT " + strconv.Itoa(limit)
+
+	rows, err := mydb.Query(mysql, args...)
+	if err != nil {
+		fmt.Println("Error querying database:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		post := &Post{}
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			continue
+		}
+		posts = append(posts, *post)
+	}
+
+	return posts
+}

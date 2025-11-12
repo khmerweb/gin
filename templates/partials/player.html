@@ -57,7 +57,7 @@
                 <div class="play-all">
                     <button onclick="changeCategory(videoPlaylists.news, 'ព័ត៌មាន', rawPlaylist.news)" class='center'>ព័ត៌មាន</button>
                     <button onclick="nextPrevious('previous')">វីដេអូមុន</button>
-                    <button onclick="newPlaylist" class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
+                    <button onclick="newPlaylist()" class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>
                     <button onclick="nextPrevious('next')">វីដេអូបន្ទាប់</button>
                 </div>
             </div>
@@ -163,4 +163,81 @@
         height: 100%;
         background: black;
     }
+
+    .Home .container{
+        display: grid;
+        grid-template-columns: repeat(4, calc(100% / 4 - 11.25px));
+        grid-gap: 30px 15px;
+        padding: 15px 0;
+    }
+    .Home .container .wrapper button{
+        position: relative;
+        padding-top: 56.25%;
+        overflow: hidden;
+        width: 100%;
+        display: block;
+        border: none;
+    }
+    .Home .container .wrapper .title{
+        padding-top: 5px !important;
+        line-height: 1.25;
+    }
+    .Home button:hover,
+    .Home .container .wrapper .title:hover{
+        cursor: pointer;
+        opacity: .7;
+    }
+    .Home .container .wrapper button img{
+        position: absolute;
+        width: 100%;
+        min-height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .Home .container .wrapper button .play-icon{
+        width: auto;
+        min-height: auto;
+        width: 15%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%)
+    }
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    .Home .container .wrapper button p{
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 2px 5px;
+        color: orange;
+        font-family: Vidaloka, OdorMeanChey;
+        display: none;
+        animation: blink 1s steps(2) infinite;
+    }
+    .Home .container .wrapper .title{
+        padding-top: 0;
+    }
+    .Home .navigation{
+        text-align: center;
+        padding-bottom: 30px;
+    }
+    
+    @media only screen and (max-width: 600px){
+        .random-video{
+            grid-template-columns: 100%;
+            padding: 10px;
+        }
+        .random-video .wrapper{
+            grid-column: 1 / span 1;
+            grid-row: 1 / span 1;
+            padding-top: 51.7%;
+        }
+        .Home .container{
+            grid-template-columns: 100%;
+            padding: 30px 10px;
+        }
+    }   
 </style>

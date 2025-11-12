@@ -2,13 +2,13 @@
     
     let posts = playlists[0]
     let jq = $
-    let category
+
     const dark = 'brightness(20%)'
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
     
     //let pageAmount = $state(Math.ceil(data.count/data.settings.frontend))
-    //let category = $state('')
+    let category = ''
 
     function parseVideos(posts){
         let videos = []
@@ -75,6 +75,18 @@
         game: countPlaylists[8],
     }
 
+    let videoPlaylists = {
+        news: latestNews,
+        movie: latestMovies,
+        travel: latestTravel,
+        simulation: latestSimulation,
+        sport: latestSport,
+        documentary: latestDocumentary,
+        food: latestFood,
+        music: latestMusic,
+        game: latestGame,
+    }
+
     $(document).ready(function() {
         $(`.random-video button:nth-child(1) img`).attr('src', playlistThumbs['movie'])
         $(`.random-video button:nth-child(2) img`).attr('src', playlistThumbs['travel'])
@@ -94,32 +106,20 @@
         $(`.random-video button:nth-child(7) p`).html(countPlaylists[7] + " របាំ​តន្ត្រី")
         $(`.random-video button:nth-child(8) p`).html(countPlaylists[8] + " ល្បែង​កំសាន្ត")
     });
-
-    let videoPlaylists = {
-        news: latestNews,
-        movie: latestMovies,
-        travel: latestTravel,
-        simulation: latestSimulation,
-        sport: latestSport,
-        documentary: latestDocumentary,
-        food: latestFood,
-        music: latestMusic,
-        game: latestGame,
-    }
     
     async function getRandomPlaylist(category, thumbs){
-		const response = await fetch(`/post/playlist/${category}`, {
+		const response = await fetch(`/api/playlist/${category}`, {
 			method: 'POST',
-			body: JSON.stringify({ thumbs }),
+			body: JSON.stringify({"thumbs": thumbs }),
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		})
 		const newPlaylist_ = await response.json()
-        posts = newPlaylist_
-        rawPlaylist[category] = newPlaylist_
-        playlistThumbs[category] = newPlaylist_[0].thumb
-        let newPlaylist = parseVideos(newPlaylist_)
+        posts = newPlaylist_.playlist
+        rawPlaylist[category] = newPlaylist_.playlist
+        playlistThumbs[category] = newPlaylist_.playlist[0].thumb
+        let newPlaylist = parseVideos(newPlaylist_.playlist)
         newPlaylist.category = category
         videoPlaylists[category] = newPlaylist
         return newPlaylist
