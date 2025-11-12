@@ -1,56 +1,59 @@
 <script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    let playlists = JSON.parse({{.Playlists}})
+</script>
+<script src="/static/scripts/set-playlists.js"></script>
 {{template "ad.html" .}}
 <section class="main region">
     <div class="feature-post">
         <div class="random-video">
             <button  onclick="changeCategory(videoPlaylists.movie, 'ភាពយន្ត​​​', rawPlaylist.movie, 1)">
-                <img src="{playlistThumbs.movie}" />
+                <img src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.movie ភាពយន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.travel, 'ដើរ​លេង​​​​​', rawPlaylist.travel, 2)">
-                <img src="playlistThumbs.travel" />
+                <img src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.travel ដើរ​លេង</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.simulation, '​ពិភព​និម្មិត​', rawPlaylist.simulation, 3)">
-                <img src="{playlistThumbs.simulation}" />
+                <img src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.simulation ពិភព​និម្មិត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.sport, '​កីឡា​​​', rawPlaylist.sport, 4)">
-                <img src="{playlistThumbs.sport}" />
+                <img src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.sport កីឡា</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.documentary, '​ឯកសារ​​​​​', rawPlaylist.documentary, 5)">
-                <img src="{playlistThumbs.documentary}" />
+                <img src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.documentary ​ឯកសារ</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.food, 'មុខ​ម្ហូប​​​​', rawPlaylist.food, 6)">
-                <img src="{playlistThumbs.food}" />
+                <img src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.food ​មុខ​ម្ហូប</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.music, 'របាំ​តន្ត្រី​​​​​', rawPlaylist.music, 7)">
-                <img src="{playlistThumbs.music}" />
+                <img src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.music របាំ​តន្ត្រី</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.game, 'ល្បែងកំសាន្ត​​​​', rawPlaylist.game, 8)">
-                <img src="{playlistThumbs.game}" />
+                <img src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.game ល្បែងកំសាន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <div class="wrapper">
                 <div id="youtube-player"></div>
-                <div class="latest-video">ទំព័រ​ដើម</div>
+                <div class="latest-video">ព័ត៌មាន</div>
                 <div class="channel-logo">
-                    <img src="/images/siteLogo.png" alt=''/>
+                    <img src="/static/images/siteLogo.png" alt=''/>
                 </div>
                 <div class="play-all">
-                    <button onclick="changeCategory(videoPlaylists.home, 'ទំព័រ​ដើម', rawPlaylist.home)" class='center'>ទំព័រ​ដើម</button>
                     <button onclick="changeCategory(videoPlaylists.news, 'ព័ត៌មាន', rawPlaylist.news)" class='center'>ព័ត៌មាន</button>
                     <button onclick="nextPrevious('previous')">វីដេអូមុន</button>
                     <button onclick="newPlaylist" class='new-playlist'>ដូរ​កំរង​វីដេអូ​</button>

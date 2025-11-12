@@ -1,0 +1,350 @@
+
+    
+    let posts = playlists[0]
+    let jq = $
+    const dark = 'brightness(20%)'
+    const normal = 'brightness(100%)'
+    const laodingVideo = 'NcQQVbioeZk'
+    
+    //let pageAmount = $state(Math.ceil(data.count/data.settings.frontend))
+    //let category = $state('')
+
+    function parseVideos(posts){
+        let videos = []
+        let thumbs = []
+        for(let post of posts){
+            videos.push(JSON.parse(post.videos))
+            thumbs.push(post.thumb)
+        }
+        videos.thumbs = thumbs
+        return videos
+    }
+
+    let latestNews = parseVideos(playlists[0])
+    latestNews.category = "news"
+    let latestMovies = parseVideos(playlists[1])
+    latestMovies.category = "movie"
+    let latestTravel = parseVideos(playlists[2])
+    latestTravel.category = "travel"
+    let latestSimulation = parseVideos(playlists[3])
+    latestSimulation.category = "simulation"
+    let latestSport = parseVideos(playlists[4])
+    latestSport.category = "sport"
+    let latestDocumentary = parseVideos(playlists[5])
+    latestDocumentary.category = "documentary"
+    let latestFood = parseVideos(playlists[6])
+    latestFood.category = "food"
+    let latestMusic = parseVideos(playlists[7])
+    latestMusic.category = "music"
+    let latestGame = parseVideos(playlists[8])
+    latestGame.category = "game"
+    
+    let rawPlaylist = {
+        news: playlists[0],
+        movie: playlists[1],
+        travel: playlists[2],
+        simulation: playlists[3],
+        sport: playlists[4],
+        documentary: playlists[5],
+        food: playlists[6],
+        music: playlists[7],
+        game: playlists[8],
+    }
+
+    let playlistThumbs = {
+        movie: rawPlaylist['movie'][0].thumb,
+        travel: rawPlaylist['travel'][0].thumb,
+        simulation: rawPlaylist['simulation'][0].thumb,
+        sport: rawPlaylist['sport'][0].thumb,
+        documentary: rawPlaylist['documentary'][0].thumb,
+        food: rawPlaylist['food'][0].thumb,
+        music: rawPlaylist['music'][0].thumb,
+        game: rawPlaylist['game'][0].thumb,
+    }
+
+    $(document).ready(function() {
+        $(`.random-video button:nth-child(1) img`).attr('src', playlistThumbs['movie'])
+        $(`.random-video button:nth-child(2) img`).attr('src', playlistThumbs['travel'])
+        $(`.random-video button:nth-child(3) img`).attr('src', playlistThumbs['simulation'])
+        $(`.random-video button:nth-child(4) img`).attr('src', playlistThumbs['sport'])
+        $(`.random-video button:nth-child(5) img`).attr('src', playlistThumbs['documentary'])
+        $(`.random-video button:nth-child(6) img`).attr('src', playlistThumbs['food'])
+        $(`.random-video button:nth-child(7) img`).attr('src', playlistThumbs['music'])
+        $(`.random-video button:nth-child(8) img`).attr('src', playlistThumbs['game'])
+    });
+
+    let videoPlaylists = {
+        news: latestNews,
+        movie: latestMovies,
+        travel: latestTravel,
+        simulation: latestSimulation,
+        sport: latestSport,
+        documentary: latestDocumentary,
+        food: latestFood,
+        music: latestMusic,
+        game: latestGame,
+    }
+    
+    async function getRandomPlaylist(category, thumbs){
+		const response = await fetch(`/post/playlist/${category}`, {
+			method: 'POST',
+			body: JSON.stringify({ thumbs }),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+		const newPlaylist_ = await response.json()
+        posts = newPlaylist_
+        rawPlaylist[category] = newPlaylist_
+        playlistThumbs[category] = newPlaylist_[0].thumb
+        let newPlaylist = parseVideos(newPlaylist_)
+        newPlaylist.category = category
+        videoPlaylists[category] = newPlaylist
+        return newPlaylist
+	}
+
+    async function newPlaylist(){
+        player.unMute()
+        player.loadVideoById(laodingVideo)
+        if(player.playlist.category !== 'news'){
+            player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs) 
+        }
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+        player.part = 0
+        if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+            player.loadVideoById(initialVideoId)
+            player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+        }else{
+            player.index = 0
+            if(!(player.playlist[player.part].reversal)){
+                player.playlist[player.part].reverse()
+                player.playlist[player.part].reversal = true
+            }
+            player.loadVideoById(player.playlist[player.part][0].id)
+        }
+        
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+    }
+
+    function loadVideo(playlist){
+        if(playlist[0][0].type === "YouTubePlaylist"){
+            player.loadPlaylist({list:playlist[0][0].id,listType:'playlist',index:0})
+        }else{
+            playlist[0].reverse()
+            playlist[0].reversal = true
+            player.loadVideoById(playlist[0][0].id)
+        }
+        jq('.Home .container .wrapper:nth-child(1) img').css({'filter':dark})
+        jq('.Home .container .wrapper:nth-child(1) p').css({'display':'block'})
+    }
+
+    function onPlayerReady(event) {
+        player.part = 0
+        player.index = 0
+        player.thumb = 1
+        player.label = 'ព័ត៌មាន'
+        player.playlist = latestNews 
+        loadVideo(latestNews )
+    }
+
+    function changeCategory(playlist, label, obj=0, thumb=0, part=0) {
+        if(obj){posts = obj}
+        if(label){player.label = label}
+        if(playlist){player.playlist = playlist}
+
+        if(player.playlist.category === 'home'){
+            category = ''
+            pageAmount = Math.ceil(data.count/data.settings.frontend)
+        }else{
+            category = '/' + player.playlist.category
+            pageAmount = Math.ceil(data.counts[player.playlist.category]/data.settings.frontend)
+        }
+
+        if((player.playlist.category === 'home')||(player.playlist.category === 'news')){
+            jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':normal})
+            jq(`.random-video button:nth-child(${player.thumb}) .playing`).css({'display':'none'})
+        }
+        if(thumb){
+            jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':normal})
+            jq(`.random-video button:nth-child(${player.thumb}) .playing`).css({'display':'none'})
+            player.thumb = thumb
+            jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':dark})
+            jq(`.random-video button:nth-child(${player.thumb}) .playing`).css({'display':'block'})
+        }
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+        player.part = part
+        player.unMute()
+        if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+            player.loadVideoById(initialVideoId)
+            player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+            jq('.latest-video').html(player.label)
+        }else{
+            if(!(player.playlist[player.part].reversal)){
+                player.playlist[player.part].reverse()
+                player.playlist[player.part].reversal = true
+            }
+            player.loadVideoById(player.playlist[player.part][0].id)
+            jq('.latest-video').html(player.label)
+            
+        }
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+        jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+    }
+
+    function onPlayerError(event){
+        if(player.index + 1 < player.playlist[player.part].length){
+            player.index += 1
+            player.loadVideoById(player.playlist[player.part][player.index].id)
+        }else{
+            jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+            jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+            player.part += 1
+            if(player.part === player.playlist.length){
+                player.part = 0
+            }
+
+            if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                player.loadVideoById(initialVideoId)
+                player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+            }else{
+                player.index = 0
+                if(!(player.playlist[player.part].reversal)){
+                    player.playlist[player.part].reverse()
+                    player.playlist[player.part].reversal = true
+                }
+                player.loadVideoById(player.playlist[player.part][0].id)
+            }
+            jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+            jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+        }
+    }
+
+    async function onPlayerStateChange(event) {   
+        if(event.data === YT.PlayerState.ENDED){
+            if(player.index + 1 < player.playlist[player.part].length){
+                player.index += 1
+                player.loadVideoById(player.playlist[player.part][player.index].id)
+                
+            }else{
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+                player.part += 1
+                if(player.part === player.playlist.length){
+                    player.loadVideoById(laodingVideo)
+                    if(player.playlist.category !== 'news'){
+                        player.playlist = await getRandomPlaylist(player.playlist.category, player.playlist.thumbs)
+                    }
+                    player.part = 0
+                }
+
+                if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                    player.loadVideoById(initialVideoId)
+                    player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+                }else{
+                    player.index = 0
+                    if(!(player.playlist[player.part].reversal)){
+                        player.playlist[player.part].reverse()
+                        player.playlist[player.part].reversal = true
+                    }
+                    player.loadVideoById(player.playlist[player.part][0].id)
+                }
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+            }
+        }
+    }
+
+    function nextPrevious(move){
+        player.unMute()
+        if(move === "next"){
+            if(player.index + 1 < player.playlist[player.part].length){
+                player.index += 1
+                player.loadVideoById(player.playlist[player.part][player.index].id)
+            }else{
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+                player.part += 1
+                if(player.part === player.playlist.length){
+                    player.part = 0
+                }
+
+                if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                    player.loadVideoById(initialVideoId)
+                    player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+                }else{
+                    player.index = 0
+                    if(!(player.playlist[player.part].reversal)){
+                        player.playlist[player.part].reverse()
+                        player.playlist[player.part].reversal = true
+                    }
+                    player.loadVideoById(player.playlist[player.part][0].id)
+                }
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+            }
+        }else if(move === "previous"){
+            if(player.index > 0){
+                player.index -= 1
+                player.loadVideoById(player.playlist[player.part][player.index].id)
+            }else{
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':normal})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'none'})
+                player.part -= 1
+                if(player.part < 0){
+                    player.part = player.playlist.length - 1
+                }
+
+                if(player.playlist[player.part][0].type === "YouTubePlaylist"){
+                    player.loadVideoById(initialVideoId)
+                    player.loadPlaylist({list:player.playlist[player.part][0].id,listType:'playlist',index:0})
+                }else{
+                    player.index = 0
+                    if(!(player.playlist[player.part].reversal)){
+                        player.playlist[player.part].reverse()
+                        player.playlist[player.part].reversal = true
+                    }
+                    player.loadVideoById(player.playlist[player.part][0].id)
+                }
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) img`).css({'filter':dark})
+                jq(`.Home .container .wrapper:nth-child(${player.part+1}) p`).css({'display':'block'})
+            }
+        }
+    }
+
+    const ytPlayerId = 'youtube-player'
+    let initialVideoId = 'cdwal5Kw3Fc'
+    let player
+
+    
+    function load() {
+        player = new YT.Player(ytPlayerId, {
+            height: '390',
+            width: '640',
+            videoId: initialVideoId,
+            playerVars: {
+                'playsinline': 1,
+                "enablejsapi": 1,
+                "mute": 1,
+                "autoplay": 1,
+                "rel": 0,
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        })
+    }
+        
+    
+window.YT.ready(function() {
+    if (window.YT) {
+        load()
+    } else {
+        window.onYouTubeIframeAPIReady = load
+    }
+})
+        

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -280,4 +281,53 @@ func SearchPosts(q string, limit int) []Post {
 		posts = append(posts, *post)
 	}
 	return posts
+}
+
+// frontend
+func GetPlaylists(limit int) string {
+	mydb := Connect()
+	defer mydb.Close()
+	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
+	var posts [][]Post
+
+	for _, value := range categories {
+		var mysql string
+		var Posts []Post
+		if value == "news" {
+			mysql = `SELECT * FROM Post WHERE categories LIKE "%` + value + `%" ORDER BY date DESC LIMIT ?`
+		} else {
+			mysql = `SELECT * FROM Post WHERE categories LIKE "%` + value + `%" ORDER BY random() LIMIT ?`
+		}
+
+		rows, err := mydb.Query(mysql, limit)
+		if err != nil {
+			fmt.Println("Error querying database:", err)
+			return ""
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			post := &Post{}
+			err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+			if err != nil {
+				fmt.Println("Error scanning row:", err)
+				continue
+			}
+			Posts = append(Posts, *post)
+		}
+		posts = append(posts, Posts)
+	}
+
+	jsonDataString, err := json.Marshal(posts)
+	if err != nil {
+		fmt.Println("Error marshalling string data:", err)
+		return ""
+	}
+
+	return string(jsonDataString)
+}
+
+func CountPlaylists() int {
+
+	return 0
 }
