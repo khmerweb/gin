@@ -129,6 +129,30 @@ func GetCategory(id string) Category {
 	return *category
 }
 
+func GetAllCategories() []Category {
+	mydb := Connect()
+	defer mydb.Close()
+	sql := `SELECT id, title, thumb, date FROM Category ORDER BY date DESC`
+	rows, err := mydb.Query(sql)
+	if err != nil {
+		fmt.Println("Error retrieving categories:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var categories []Category
+	for rows.Next() {
+		var category Category
+		err := rows.Scan(&category.ID, &category.Title, &category.Thumb, &category.Date)
+		if err != nil {
+			fmt.Println("Error scanning category:", err)
+			continue
+		}
+		categories = append(categories, category)
+	}
+	return categories
+}
+
 func PaginateCategories(c *gin.Context, limit int, query int) []Category {
 	mydb := Connect()
 	defer mydb.Close()

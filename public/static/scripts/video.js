@@ -1,5 +1,17 @@
 var episode = 0
 
+function getCategory(){
+    let categories = $('input[name="categories"').val()
+    let category = $('select[name="category"').val()
+    if(categories === ''){
+        categories += category
+    }else{
+        categories += (`, ${category}`)
+    }
+
+    $('input[name="categories"').val(categories)
+}
+
 const genJson = () => {
     const type = $('select[name="type"').val()
     const id = $('input[name="videoid"').val()

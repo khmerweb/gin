@@ -2,6 +2,7 @@
     
     let posts = playlists[0]
     let jq = $
+    let category
     const dark = 'brightness(20%)'
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
@@ -62,6 +63,18 @@
         game: rawPlaylist['game'][0].thumb,
     }
 
+    let CountPlaylists = {
+        news: countPlaylists[0],
+        movie: countPlaylists[1],
+        travel: countPlaylists[2],
+        simulation: countPlaylists[3],
+        sport: countPlaylists[4],
+        documentary: countPlaylists[5],
+        food: countPlaylists[6],
+        music: countPlaylists[7],
+        game: countPlaylists[8],
+    }
+
     $(document).ready(function() {
         $(`.random-video button:nth-child(1) img`).attr('src', playlistThumbs['movie'])
         $(`.random-video button:nth-child(2) img`).attr('src', playlistThumbs['travel'])
@@ -71,6 +84,15 @@
         $(`.random-video button:nth-child(6) img`).attr('src', playlistThumbs['food'])
         $(`.random-video button:nth-child(7) img`).attr('src', playlistThumbs['music'])
         $(`.random-video button:nth-child(8) img`).attr('src', playlistThumbs['game'])
+
+        $(`.random-video button:nth-child(1) p`).html(countPlaylists[1] + " ភាពយន្ត")
+        $(`.random-video button:nth-child(2) p`).html(countPlaylists[2] + " ដើរលេង")
+        $(`.random-video button:nth-child(3) p`).html(countPlaylists[3] + " ពិភព​និម្មិត")
+        $(`.random-video button:nth-child(4) p`).html(countPlaylists[4] + " កីឡា")
+        $(`.random-video button:nth-child(5) p`).html(countPlaylists[5] + " ឯកសារ")
+        $(`.random-video button:nth-child(6) p`).html(countPlaylists[6] + " មុខ​ម្ហូប")
+        $(`.random-video button:nth-child(7) p`).html(countPlaylists[7] + " របាំ​តន្ត្រី")
+        $(`.random-video button:nth-child(8) p`).html(countPlaylists[8] + " ល្បែង​កំសាន្ត")
     });
 
     let videoPlaylists = {
@@ -154,13 +176,8 @@
         if(label){player.label = label}
         if(playlist){player.playlist = playlist}
 
-        if(player.playlist.category === 'home'){
-            category = ''
-            pageAmount = Math.ceil(data.count/data.settings.frontend)
-        }else{
-            category = '/' + player.playlist.category
-            pageAmount = Math.ceil(data.counts[player.playlist.category]/data.settings.frontend)
-        }
+        category = '/' + player.playlist.category
+        pageAmount = Math.ceil(CountPlaylists[player.playlist.category]/frontend)
 
         if((player.playlist.category === 'home')||(player.playlist.category === 'news')){
             jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':normal})

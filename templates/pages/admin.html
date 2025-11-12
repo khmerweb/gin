@@ -18,7 +18,9 @@
                     <select name="category" value="" onchange="getCategory()" >
                         <option disabled selected>ជ្រើសរើស​យក​ជំពូក</option>
                     
-                        <option>{category.title}</option>
+                        {{range .Categories}}
+                        <option>{{.Title}}</option>
+                        {{end}}
                     
                     </select>
                     <input type="text" name="thumb" required placeholder="រូប​​តំណាង" />

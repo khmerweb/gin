@@ -1,5 +1,7 @@
 <script>
     let playlists = JSON.parse({{.Playlists}})
+    let countPlaylists = JSON.parse({{.CountPlaylists}})
+    const frontend = {{.Frontend}}
 </script>
 <script src="/static/scripts/set-playlists.js"></script>
 {{template "ad.html" .}}
@@ -101,7 +103,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background: var(--background-dark);
+        background: #253443;
         color: white;
         text-align: center;
         font-family: Vidaloka, OdorMeanChey;

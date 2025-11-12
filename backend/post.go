@@ -25,6 +25,7 @@ func RegisterRoutesPost(router *gin.RouterGroup) {
 			pageNumbers = append(pageNumbers, i+1)
 		}
 		posts := db.GetPosts(dashboard)
+		categories := db.GetAllCategories()
 		c.HTML(200, "admin", gin.H{
 			"Title":           "ទំព័រ​ការផ្សាយ",
 			"UserName":        userName,
@@ -33,6 +34,7 @@ func RegisterRoutesPost(router *gin.RouterGroup) {
 			"Route":           "ការផ្សាយ",
 			"ItemsCount":      count,
 			"Items":           posts,
+			"Categories":      categories,
 			"Type":            "post",
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      1,
@@ -67,6 +69,7 @@ func RegisterRoutesPost(router *gin.RouterGroup) {
 		page, _ := c.GetQuery("p")
 		pageInt, _ := strconv.Atoi(page)
 		posts := db.PaginatePosts(c, dashboard, pageInt)
+		categories := db.GetAllCategories()
 
 		c.HTML(200, "admin-edit", gin.H{
 			"Title":           "ទំព័រ​កែប្រែការផ្សាយ",
@@ -77,6 +80,7 @@ func RegisterRoutesPost(router *gin.RouterGroup) {
 			"Route":           "ការផ្សាយ",
 			"ItemsCount":      count,
 			"Items":           posts,
+			"Categories":      categories,
 			"Type":            "post",
 			"PageNumbers":     pageNumbers,
 			"PageNumber":      pageInt,

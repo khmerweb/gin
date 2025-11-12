@@ -327,7 +327,22 @@ func GetPlaylists(limit int) string {
 	return string(jsonDataString)
 }
 
-func CountPlaylists() int {
-
-	return 0
+func CountPlaylists() string {
+	mydb := Connect()
+	defer mydb.Close()
+	var count int
+	var counts []int
+	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
+	for _, value := range categories {
+		sql := `SELECT COUNT(*) FROM Post WHERE categories LIKE "%` + value + `%"`
+		row := mydb.QueryRow(sql)
+		row.Scan(&count)
+		counts = append(counts, count)
+	}
+	jsonDataString, err := json.Marshal(counts)
+	if err != nil {
+		fmt.Println("Error marshalling string data:", err)
+		return ""
+	}
+	return string(jsonDataString)
 }

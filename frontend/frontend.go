@@ -14,11 +14,13 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		limit := backend.Setup().Playlist
 		playlists := db.GetPlaylists(limit)
 		countPlaylists := db.CountPlaylists()
+		frontend := backend.Setup().Frontend
 		c.HTML(200, "home", gin.H{
 			"Title":          "My Gin Website",
 			"SiteTitle":      siteTitle,
 			"Playlists":      playlists,
 			"CountPlaylists": countPlaylists,
+			"Frontend":       frontend,
 		})
 	})
 
