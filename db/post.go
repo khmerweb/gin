@@ -287,7 +287,7 @@ func SearchPosts(q string, limit int) []Post {
 func GetPlaylists(limit int) string {
 	mydb := Connect()
 	defer mydb.Close()
-	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
+	categories := []string{"news", "movie", "travel", "game", "sport", "doc", "food", "music", "distraction"}
 	var posts [][]Post
 
 	for _, value := range categories {
@@ -332,7 +332,7 @@ func CountPlaylists() string {
 	defer mydb.Close()
 	var count int
 	var counts []int
-	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
+	categories := []string{"news", "movie", "travel", "game", "sport", "doc", "food", "music", "distraction"}
 	for _, value := range categories {
 		sql := `SELECT COUNT(*) FROM Post WHERE categories LIKE "%` + value + `%"`
 		row := mydb.QueryRow(sql)
@@ -344,6 +344,7 @@ func CountPlaylists() string {
 		fmt.Println("Error marshalling string data:", err)
 		return ""
 	}
+
 	return string(jsonDataString)
 }
 
