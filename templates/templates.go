@@ -8,11 +8,20 @@ import (
 )
 
 func formatDate(layout string, dateString string) (string, error) {
-	t, err := time.Parse("2006-01-02T15:04:05", dateString)
-	if err != nil {
-		return "", err
+	layoutShort := "2006-01-02T15:04"
+	layoutLong := "2006-01-02T15:04:05"
+
+	t, err := time.Parse(layoutLong, dateString)
+	if err == nil {
+		return t.Format(layout), nil
 	}
-	return t.Format(layout), nil
+
+	t, err = time.Parse(layoutShort, dateString)
+	if err == nil {
+		return t.Format(layout), nil
+	}
+
+	return "", err
 }
 
 func CreateMyRender() multitemplate.Renderer {

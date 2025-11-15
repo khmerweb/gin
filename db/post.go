@@ -11,16 +11,15 @@ import (
 )
 
 type Post struct {
-	ID         string `json:"id"`
-	Title      string `json:"title" form:"title" binding:"required"`
-	Content    string `json:"content" form:"content"`
-	Categories string `json:"categories" form:"categories" binding:"required"`
-	Thumb      string `json:"thumb" form:"thumb" binding:"required"`
-	Date       string `json:"date" form:"date" binding:"required"`
-	Videos     string `json:"videos" form:"videos"`
-	Author     string `json:"author"`
-	CreatedAt  string `json:"created_at"`
-	UpdatedAt  string `json:"updated_at"`
+	ID         string  `json:"id"`
+	Title      string  `json:"title" form:"title" binding:"required"`
+	Content    string  `json:"content" form:"content"`
+	Categories string  `json:"categories" form:"categories" binding:"required"`
+	Thumb      string  `json:"thumb" form:"thumb" binding:"required"`
+	Date       string  `json:"date" form:"date" binding:"required"`
+	Videos     string  `json:"videos" form:"videos"`
+	Author     string  `json:"author"`
+	Expiration *string `json:"expiration"`
 }
 
 func CreatePostSchema() {
@@ -114,7 +113,7 @@ func GetPosts(limit int) []Post {
 	defer rows.Close()
 	var posts []Post
 	for rows.Next() {
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
@@ -166,7 +165,7 @@ func GetPost(id string) Post {
 	post := &Post{}
 	mysql := `SELECT * FROM Post WHERE id = ?`
 	row := mydb.QueryRow(mysql, id)
-	err := row.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+	err := row.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 	if err != nil {
 		fmt.Println("Error scanning row:", err)
 		return Post{}
@@ -247,7 +246,7 @@ func PaginatePosts(c *gin.Context, dashboard int, query int) []Post {
 	defer rows.Close()
 	var posts []Post
 	for rows.Next() {
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
@@ -273,7 +272,7 @@ func SearchPosts(q string, limit int) []Post {
 	var posts []Post
 	for rows.Next() {
 		post := &Post{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
@@ -287,7 +286,7 @@ func SearchPosts(q string, limit int) []Post {
 func GetPlaylists(limit int) string {
 	mydb := Connect()
 	defer mydb.Close()
-	categories := []string{"news", "movie", "travel", "game", "sport", "doc", "food", "music", "distraction"}
+	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
 	var posts [][]Post
 
 	for _, value := range categories {
@@ -308,7 +307,7 @@ func GetPlaylists(limit int) string {
 
 		for rows.Next() {
 			post := &Post{}
-			err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+			err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 			if err != nil {
 				fmt.Println("Error scanning row:", err)
 				continue
@@ -332,7 +331,7 @@ func CountPlaylists() string {
 	defer mydb.Close()
 	var count int
 	var counts []int
-	categories := []string{"news", "movie", "travel", "game", "sport", "doc", "food", "music", "distraction"}
+	categories := []string{"news", "movie", "travel", "simulation", "sport", "documentary", "food", "music", "game"}
 	for _, value := range categories {
 		sql := `SELECT COUNT(*) FROM Post WHERE categories LIKE "%` + value + `%"`
 		row := mydb.QueryRow(sql)
@@ -375,7 +374,7 @@ func GetPlaylist(c *gin.Context, limit int, thumbs []string) []Post {
 	var posts []Post
 	for rows.Next() {
 		post := &Post{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.CreatedAt, &post.UpdatedAt)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue

@@ -11,8 +11,8 @@ import (
 
 func Connect() *sql.DB {
 	// Get database URL and auth token from environment variables
-	dbUrl := os.Getenv("TURSO_DATABASE_URL")
-	authToken := os.Getenv("TURSO_AUTH_TOKEN")
+	dbUrl := os.Getenv("TURSO_DATABASE_URL_GO")
+	authToken := os.Getenv("TURSO_AUTH_TOKEN_GO")
 	if dbUrl == "" || authToken == "" {
 		log.Fatal("TURSO_DATABASE_URL and TURSO_AUTH_TOKEN environment variables must be set.")
 	}
