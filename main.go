@@ -1,6 +1,5 @@
 //package main
 
-// go mod tidy
 package handler
 
 import (
