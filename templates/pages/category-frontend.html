@@ -1,0 +1,102 @@
+Category{{template "base.html" .}}
+
+{{define "title" }}
+    Home Page
+{{end}}
+
+{{define "content"}}
+{{template "ad.html" .}}
+<section class="Category region">
+    <div class="container">
+        {{range .Posts}}
+            <div class="wrapper">
+                <a href="/post/{{.ID}}">
+                    <img src="{{.Thumb}}" alt=''/>
+                    {{if len .Videos}}
+                    <img class="play-icon" src="/static/images/play.png" alt=''/>
+                    {{end}}
+                </a>
+                <div class="date">{{formatDate "02-01-2006" .Date}}</div>
+                <a class="title" href="{{.ID}}">
+                    <div >{{.Title}}</div>
+                </a>
+            </div>
+        {{end}}
+    </div>
+    <script>
+        function paginate(event){
+            document.location = "/" + {{.Category}} + "/" + event.target.value
+        }
+    </script>
+    <div class="pagination">
+        <span>ទំព័រ </span>
+        <select onchange="paginate(event)">
+            <span>​​​​​​​​​​​​​​​​​​​​​ទំព័រ </span>
+			{{ range .PageNumbers}}
+				{{if eq . $.CurrentPage}}
+				<option selected>{{.}}</option>
+				{{else}}
+				<option>{{.}}</option>
+				{{end}}
+			{{end}}
+		</select>  
+        <span>នៃ {{len .PageNumbers}}</span>
+    </div>
+</section>
+
+<style>
+    .Category .container{
+        display: grid;
+        grid-template-columns: repeat(4, calc(100% / 4 - 11.25px));
+        grid-gap: 30px 15px;
+        padding: 15px 0;
+    }
+    .Category .container .wrapper a{
+        position: relative;
+        padding-top: 56.25%;
+        overflow: hidden;
+        width: 100%;
+        display: block;
+        border: none;
+    }
+    .Category .container .wrapper .date,
+    .Category .container .wrapper .title{
+        padding-top: 5px !important;
+        line-height: 1.25;
+    }
+    .Category a:hover,
+    .Category .container .wrapper .title:hover{
+        cursor: pointer;
+        opacity: .7;
+    }
+    .Category .container .wrapper a img{
+        position: absolute;
+        width: 100%;
+        min-height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .Category .container .wrapper a .play-icon{
+        width: auto;
+        min-height: auto;
+        width: 15%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%)
+    }
+    .Category .container .wrapper .title{
+        padding-top: 0;
+    }
+    .Category .pagination{
+        text-align: center;
+        padding-bottom: 30px;
+    }
+    
+    @media only screen and (max-width: 600px){
+        .Category .container{
+            grid-template-columns: 100%;
+            padding: 30px 10px;
+        }
+    }   
+</style>
+{{end}}

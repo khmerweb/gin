@@ -234,10 +234,18 @@ func PaginatePosts(c *gin.Context, dashboard int, query int) []Post {
 		page, _ = strconv.Atoi(pageStr)
 	}
 
+	category := c.Param("category")
+
 	limit := dashboard
 	offset := (page - 1) * dashboard
 	post := &Post{}
-	mysql := `SELECT * FROM Post ORDER BY date DESC LIMIT ? OFFSET ?`
+	var mysql string
+	if category != "" {
+		mysql = `SELECT * FROM Post WHERE categories LIKE "%` + category + `%" ORDER BY date DESC LIMIT ? OFFSET ?`
+	} else {
+		mysql = `SELECT * FROM Post ORDER BY date DESC LIMIT ? OFFSET ?`
+	}
+
 	rows, err := mydb.Query(mysql, limit, offset)
 	if err != nil {
 		fmt.Println("Error querying database:", err)
@@ -383,4 +391,14 @@ func GetPlaylist(c *gin.Context, limit int, thumbs []string) []Post {
 	}
 
 	return posts
+}
+func CountPostsByCategory(category string) int {
+	mydb := Connect()
+	defer mydb.Close()
+	var count int
+	sql := `SELECT COUNT(*) FROM Post WHERE categories LIKE "%` + category + `%"`
+	row := mydb.QueryRow(sql)
+	row.Scan(&count)
+
+	return count
 }

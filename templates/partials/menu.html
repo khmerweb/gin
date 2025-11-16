@@ -1,10 +1,78 @@
+<script>
+const pageURL = {{.PageUrl}}
+let isresponsive = false
+
+let home = ''
+let news = ""
+let opinion = ""
+let documentary = ""
+let sport = ""
+let movie = ""
+let travel = ""
+let contact = ""
+let about = ""
+let simulation = ""
+let entertainment = ""
+
+if(pageURL === '/'){
+    $(".home").addClass("active")
+    $(document).ready(function() {
+      $('.home').addClass('active');
+    })
+}else if(pageURL === 'news'){
+    $(document).ready(function() {
+      $('.news').addClass('active');
+    })
+}else if(pageURL === 'opinion'){
+    $(document).ready(function() {
+      $('.opinion').addClass('active');
+    })
+}else if(pageURL === 'documentary'){
+    $(document).ready(function() {
+      $('.documentary').addClass('active');
+    })
+}else if(pageURL === 'sport'){
+    $(document).ready(function() {
+      $('.sport').addClass('active');
+    })
+}else if(pageURL === 'movie'){
+    $(document).ready(function() {
+      $('.movie').addClass('active');
+    })
+}else if(pageURL === 'trvel'){
+    $(document).ready(function() {
+      $('.trvel').addClass('active');
+    })
+}else if(pageURL === 'simulation'){
+    $(document).ready(function() {
+      $('.simulation').addClass('active');
+    })
+}else if(pageURL === 'entertainment'){
+    $(document).ready(function() {
+      $('.entertainment').addClass('active');
+    })
+}else if(data.pageURL === 'contact'){
+    $(document).ready(function() {
+      $('.contact').addClass('active');
+    })
+}else if(pageURL === 'about'){
+    $(document).ready(function() {
+      $('.about').addClass('active');
+    })
+}
+
+function myFunction() {
+  isresponsive = !isresponsive
+}
+</script>
+
 <section class="menu">
     <nav class="nav">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="region">
             <div data-sveltekit-reload class="topnav" class:responsive={isresponsive} id="myTopnav">
-                <a href="/" class="home ${home}">ទំព័រ​ដើម</a>
-                <div class="dropdown ${news}">
+                <a href="/" class="home">ទំព័រ​ដើម</a>
+                <div class="dropdown news">
                   <button class="dropbtn">ព័ត៌មាន
                     <i class="fa fa-caret-down"></i>
                   </button>
@@ -13,10 +81,10 @@
                     <a href="/global/1">ក្រៅ​ប្រទេស</a>
                   </div>
                 </div>
-                <a href="/opinion/1" class="opinion ${opinion}">មតិ​យោបល់</a>
-                <a href="/documentary/1" class="documentary ${documentary}">ឯកសារ</a>
-                <a href="/sport/1" class="sport ${sport}">កីឡា</a>
-                <div class="dropdown ${movie}">
+                <a href="/opinion/1" class="opinion">មតិ​យោបល់</a>
+                <a href="/documentary/1" class="documentary">ឯកសារ</a>
+                <a href="/sport/1" class="sport">កីឡា</a>
+                <div class="dropdown movie">
                   <button class="dropbtn">ភាពយន្ត
                     <i class="fa fa-caret-down"></i>
                   </button>
@@ -29,9 +97,9 @@
                     <a href="/movies/1">​ឥត​ព្រៀង​ទុក</a>
                   </div>
                 </div>
-                <a href="/travel/1" class="travel ${travel}">ដើរ​លេង</a>
-                <a href="/simulation/1" class="simulation ${simulation}">ពិភព​និមិ្មត</a>
-                <div class="dropdown ${entertainment}">
+                <a href="/travel/1" class="travel">ដើរ​លេង</a>
+                <a href="/simulation/1" class="simulation">ពិភព​និមិ្មត</a>
+                <div class="dropdown entertainment">
                   <button class="dropbtn">កំសាន្ត
                     <i class="fa fa-caret-down"></i>
                   </button>
@@ -41,8 +109,8 @@
                     <a href="/game/1">ល្បែង​កំសាន្ត</a>
                   </div>
                 </div>
-                <a href="/page/kLbYmi8rE1" class="contact ${contact}">ទំនាក់ទំនង</a>
-                <a href="/page/rZuVKlXNb8" class="about ${about}">អំពីយើង​ខ្ញុំ</a>
+                <a href="/page/kLbYmi8rE1" class="contact">ទំនាក់ទំនង</a>
+                <a href="/page/rZuVKlXNb8" class="about">អំពីយើង​ខ្ញុំ</a>
                 <a href="javascript:void(0);" class="icon" onclick="myFunction">
                     <i class="fa fa-bars"></i>
                 </a>
@@ -69,12 +137,13 @@ nav{
     font-size: 14px;
   }
   .topnav a:hover {
-    background-color: var(--background-dark);
+    background-color: var(--menu-active);
     color: white;
   }
-  .topnav a.active, div.active {
-    background-color: var(--background-dark);
-    color: white;
+  .topnav a.active, div.active,
+  div.active button {
+    background-color: var(--menu-active);
+    color: white !important;
   }
   .topnav .icon {
     display: none;
@@ -110,7 +179,7 @@ nav{
   text-align: left;
 }
 .topnav a:hover, .dropdown:hover .dropbtn {
-  background-color: var(--background-dark);
+  background-color: var(--menu-active);
   color: white;
 }
 .dropdown-content a:hover {

@@ -9,42 +9,42 @@
     <div class="feature-post">
         <div class="random-video">
             <button  onclick="changeCategory(videoPlaylists.movie, 'ភាពយន្ត​​​', rawPlaylist.movie, 1)">
-                <img src="/static/images/no-image.png" />
+                <img id="movie" src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.movie ភាពយន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.travel, 'ដើរ​លេង​​​​​', rawPlaylist.travel, 2)">
-                <img src="/static/images/no-image.png" />
+                <img id="travel" src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.travel ដើរ​លេង</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.simulation, '​ពិភព​និម្មិត​', rawPlaylist.simulation, 3)">
-                <img src="/static/images/no-image.png" />
+                <img id="simulation" src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.simulation ពិភព​និម្មិត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.sport, '​កីឡា​​​', rawPlaylist.sport, 4)">
-                <img src="/static/images/no-image.png" />
+                <img id="sport" src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.sport កីឡា</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.documentary, '​ឯកសារ​​​​​', rawPlaylist.documentary, 5)">
-                <img src="/static/images/no-image.png" />
+                <img id="documentary" src="/static/images/no-image.png" />
                 <p class="movies-label">data.counts.documentary ​ឯកសារ</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.food, 'មុខ​ម្ហូប​​​​', rawPlaylist.food, 6)">
-                <img src="/static/images/no-image.png" />
+                <img id="food" src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.food ​មុខ​ម្ហូប</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.music, 'របាំ​តន្ត្រី​​​​​', rawPlaylist.music, 7)">
-                <img src="/static/images/no-image.png" />
+                <img id="music" src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.music របាំ​តន្ត្រី</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
             <button onclick="changeCategory(videoPlaylists.game, 'ល្បែងកំសាន្ត​​​​', rawPlaylist.game, 8)">
-                <img src="/static/images/no-image.png" />
+                <img id="game" src="/static/images/no-image.png" />
                 <p class="news-label">data.counts.game ល្បែងកំសាន្ត</p>
                 <span class='playing'>កំពុង​លេង...</span>
             </button>
@@ -67,9 +67,7 @@
 </section>
 {{template "ad.html" .}}
 
-<section class="Home region">
-    
-</section>
+<section class="Home region"></section>
 
 <style>
     .random-video{
@@ -182,6 +180,7 @@
         display: block;
         border: none;
     }
+    .Home .container .wrapper .date,
     .Home .container .wrapper .title{
         padding-top: 5px !important;
         line-height: 1.25;

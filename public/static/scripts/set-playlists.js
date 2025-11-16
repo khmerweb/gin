@@ -7,8 +7,8 @@
     const normal = 'brightness(100%)'
     const laodingVideo = 'NcQQVbioeZk'
     
-    //let pageAmount = $state(Math.ceil(data.count/data.settings.frontend))
-    let category = ''
+    let category = 'news'
+    let pageAmount = Math.ceil(countPlaylists[0]/frontend)
 
     function parseVideos(posts){
         let videos = []
@@ -88,14 +88,14 @@
     }
 
     $(document).ready(function() {
-        $(`.random-video button:nth-child(1) img`).attr('src', playlistThumbs['movie'])
-        $(`.random-video button:nth-child(2) img`).attr('src', playlistThumbs['travel'])
-        $(`.random-video button:nth-child(3) img`).attr('src', playlistThumbs['simulation'])
-        $(`.random-video button:nth-child(4) img`).attr('src', playlistThumbs['sport'])
-        $(`.random-video button:nth-child(5) img`).attr('src', playlistThumbs['documentary'])
-        $(`.random-video button:nth-child(6) img`).attr('src', playlistThumbs['food'])
-        $(`.random-video button:nth-child(7) img`).attr('src', playlistThumbs['music'])
-        $(`.random-video button:nth-child(8) img`).attr('src', playlistThumbs['game'])
+        $(`.random-video button #movie`).attr('src', playlistThumbs['movie'])
+        $(`.random-video button #travel`).attr('src', playlistThumbs['travel'])
+        $(`.random-video button #simulation`).attr('src', playlistThumbs['simulation'])
+        $(`.random-video button #sport`).attr('src', playlistThumbs['sport'])
+        $(`.random-video button #documentary`).attr('src', playlistThumbs['documentary'])
+        $(`.random-video button #food`).attr('src', playlistThumbs['food'])
+        $(`.random-video button #music`).attr('src', playlistThumbs['music'])
+        $(`.random-video button #game`).attr('src', playlistThumbs['game'])
 
         $(`.random-video button:nth-child(1) p`).html(countPlaylists[1] + " ភាពយន្ត")
         $(`.random-video button:nth-child(2) p`).html(countPlaylists[2] + " ដើរលេង")
@@ -119,9 +119,11 @@
         posts = newPlaylist_.playlist
         rawPlaylist[category] = newPlaylist_.playlist
         playlistThumbs[category] = newPlaylist_.playlist[0].thumb
+        $(`.random-video button #${category}`).attr('src', newPlaylist_.playlist[0].thumb)
         let newPlaylist = parseVideos(newPlaylist_.playlist)
         newPlaylist.category = category
         videoPlaylists[category] = newPlaylist
+        displayPosts(newPlaylist_.playlist, pageAmount)
         return newPlaylist
 	}
 
@@ -168,7 +170,7 @@
         player.thumb = 1
         player.label = 'ព័ត៌មាន'
         player.playlist = latestNews 
-        displayPosts(rawPlaylist.news, latestNews.length)
+        displayPosts(rawPlaylist.news, pageAmount)
         loadVideo(latestNews)
     }
 
@@ -177,7 +179,7 @@
         if(label){player.label = label}
         if(playlist){player.playlist = playlist}
         
-        category = '/' + player.playlist.category
+        category = player.playlist.category
         pageAmount = Math.ceil(CountPlaylists[player.playlist.category]/frontend)
         displayPosts(posts, pageAmount)
 
@@ -388,6 +390,10 @@ function displayPosts(posts, pageAmount){
     html += displayHomePagination(pageAmount)
     $(".Home").empty()
     $(".Home").html(html)
+}
+
+function paginate(event){
+    document.location = "/" + category + "/" + event.target.value
 }
 
 function displayHomePagination(pageAmount){
