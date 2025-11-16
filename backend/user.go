@@ -62,6 +62,7 @@ func RegisterRoutesUser(router *gin.RouterGroup) {
 		session.Save()
 		count := db.CountUsers()
 		user := db.GetUser(c.Param("id"))
+
 		options := []string{"Author", "Editor", "Admin"}
 		selected := user.Role
 		dashboard := Setup().Dashboard

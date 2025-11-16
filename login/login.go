@@ -20,8 +20,8 @@ type User struct {
 }
 
 func RegisterRoutes(router *gin.RouterGroup) {
-	//db.CreateRootUser()
 	mydb := db.Connect()
+	//db.CreateRootUser()
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
 		value := session.Get("userId")
