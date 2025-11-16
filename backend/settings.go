@@ -11,7 +11,6 @@ import (
 func Setup() db.Setting {
 	var settings db.Setting
 	settings = db.Setting{
-		SiteTitle:   "ដំណឹង​ល្អ",
 		Description: "description",
 		Dashboard:   10,
 		Frontend:    20,

@@ -67,6 +67,10 @@
 </section>
 {{template "ad.html" .}}
 
+<section class="Home region">
+    
+</section>
+
 <style>
     .random-video{
         display: grid;
@@ -170,7 +174,7 @@
         grid-gap: 30px 15px;
         padding: 15px 0;
     }
-    .Home .container .wrapper button{
+    .Home .container .wrapper a{
         position: relative;
         padding-top: 56.25%;
         overflow: hidden;
@@ -182,19 +186,19 @@
         padding-top: 5px !important;
         line-height: 1.25;
     }
-    .Home button:hover,
+    .Home a:hover,
     .Home .container .wrapper .title:hover{
         cursor: pointer;
         opacity: .7;
     }
-    .Home .container .wrapper button img{
+    .Home .container .wrapper a img{
         position: absolute;
         width: 100%;
         min-height: 100%;
         top: 0;
         left: 0;
     }
-    .Home .container .wrapper button .play-icon{
+    .Home .container .wrapper a .play-icon{
         width: auto;
         min-height: auto;
         width: 15%;
@@ -207,7 +211,7 @@
         50% { opacity: 0; }
         100% { opacity: 1; }
     }
-    .Home .container .wrapper button p{
+    .Home .container .wrapper a p{
         position: absolute;
         top: 0;
         left: 0;
@@ -220,7 +224,7 @@
     .Home .container .wrapper .title{
         padding-top: 0;
     }
-    .Home .navigation{
+    .Home .pagination{
         text-align: center;
         padding-bottom: 30px;
     }

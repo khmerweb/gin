@@ -10,9 +10,9 @@ import (
 )
 
 type Setting struct {
-	ID          string `json:"id"`
-	Title       string `json:"title" form:"title" binding:"required"`
-	SiteTitle   string `json:"siteTitle" form:"siteTitle" binding:"required"`
+	ID    string `json:"id"`
+	Title string `json:"title" form:"title" binding:"required"`
+	//SiteTitle   string `json:"siteTitle" form:"siteTitle" binding:"required"`
 	Description string `json:"description" form:"description"`
 	Dashboard   int    `json:"dashboard" form:"dashboard" binding:"required"`
 	Frontend    int    `json:"frontend" form:"frontend" binding:"required"`
@@ -61,7 +61,7 @@ func CountSettings() int {
 func GetSettings(limit int) []Setting {
 	mydb := Connect()
 	defer mydb.Close()
-	sql := `SELECT id, title, siteTitle, description, dashboard, frontend, categories, playlist, thumb, date FROM Setting ORDER BY date DESC LIMIT ?`
+	sql := `SELECT id, title, description, dashboard, frontend, categories, playlist, thumb, date FROM Setting ORDER BY date DESC LIMIT ?`
 	rows, err := mydb.Query(sql, limit)
 	if err != nil {
 		fmt.Println("Error retrieving categories:", err)
@@ -72,7 +72,7 @@ func GetSettings(limit int) []Setting {
 	var settings []Setting
 	for rows.Next() {
 		var setting Setting
-		err := rows.Scan(&setting.ID, &setting.Title, &setting.SiteTitle, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
+		err := rows.Scan(&setting.ID, &setting.Title, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
 		if err != nil {
 			fmt.Println("Error scanning category:", err)
 			continue
@@ -102,7 +102,7 @@ func CreateSetting(c *gin.Context) {
 	}
 	setting.ID = uuid.New().String()
 	sql := `INSERT INTO Setting VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err := mydb.Exec(sql, setting.ID, setting.Title, setting.SiteTitle, setting.Description, setting.Dashboard, setting.Frontend, setting.Categories, setting.Playlist, setting.Thumb, setting.Date)
+	_, err := mydb.Exec(sql, setting.ID, setting.Title, setting.Description, setting.Dashboard, setting.Frontend, setting.Categories, setting.Playlist, setting.Thumb, setting.Date)
 	if err != nil {
 		session := sessions.Default(c)
 		session.AddFlash("ការបង្កើត​ setting ​មាន​បញ្ហា!: "+err.Error(), "error")
@@ -137,7 +137,7 @@ func PaginateSettings(c *gin.Context, dashboard int, query int) []Setting {
 	defer rows.Close()
 	var settings []Setting
 	for rows.Next() {
-		err := rows.Scan(&setting.ID, &setting.Title, &setting.SiteTitle, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
+		err := rows.Scan(&setting.ID, &setting.Title, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
 		if err != nil {
 			fmt.Println("Error scanning row:", err)
 			continue
@@ -175,7 +175,7 @@ func GetSetting(id string) Setting {
 	setting := &Setting{}
 	mysql := `SELECT * FROM Setting WHERE id = ?`
 	row := mydb.QueryRow(mysql, id)
-	err := row.Scan(&setting.ID, &setting.Title, &setting.SiteTitle, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
+	err := row.Scan(&setting.ID, &setting.Title, &setting.Description, &setting.Dashboard, &setting.Frontend, &setting.Categories, &setting.Playlist, &setting.Thumb, &setting.Date)
 	if err != nil {
 		fmt.Println("Error scanning row:", err)
 		return Setting{}
@@ -202,8 +202,8 @@ func UpdateSetting(c *gin.Context) {
 		return
 	}
 	setting.ID = c.Param("id")
-	sql := `UPDATE Setting SET title = ?, siteTitle = ?, description = ?, dashboard = ?, frontend = ?, categories = ?, playlist = ?, thumb = ?, date = ? WHERE id = ?`
-	_, err := mydb.Exec(sql, setting.Title, setting.SiteTitle, setting.Description, setting.Dashboard, setting.Frontend, setting.Categories, setting.Playlist, setting.Thumb, setting.Date, setting.ID)
+	sql := `UPDATE Setting SET title = ?, description = ?, dashboard = ?, frontend = ?, categories = ?, playlist = ?, thumb = ?, date = ? WHERE id = ?`
+	_, err := mydb.Exec(sql, setting.Title, setting.Description, setting.Dashboard, setting.Frontend, setting.Categories, setting.Playlist, setting.Thumb, setting.Date, setting.ID)
 	if err != nil {
 		session.AddFlash("ការកែប្រែ​ setting មាន​បញ្ហា!: "+err.Error(), "error")
 		session.Save()

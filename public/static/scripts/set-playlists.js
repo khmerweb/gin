@@ -168,16 +168,18 @@
         player.thumb = 1
         player.label = 'ព័ត៌មាន'
         player.playlist = latestNews 
-        loadVideo(latestNews )
+        displayPosts(rawPlaylist.news, latestNews.length)
+        loadVideo(latestNews)
     }
 
     function changeCategory(playlist, label, obj=0, thumb=0, part=0) {
         if(obj){posts = obj}
         if(label){player.label = label}
         if(playlist){player.playlist = playlist}
-
+        
         category = '/' + player.playlist.category
         pageAmount = Math.ceil(CountPlaylists[player.playlist.category]/frontend)
+        displayPosts(posts, pageAmount)
 
         if((player.playlist.category === 'home')||(player.playlist.category === 'news')){
             jq(`.random-video button:nth-child(${player.thumb}) img`).css({'filter':normal})
@@ -364,3 +366,39 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 function onYouTubeIframeAPIReady() {
     load()
 } 
+
+function displayPosts(posts, pageAmount){
+    let html = `<div class="container">`
+    for(const index in posts){
+        html += `<div class="wrapper">`
+        html += `<a onclick="changeCategory(false, false, false, false, ${index})">`
+        html += `<img src="${posts[index].thumb}" alt=''/>`
+        if(posts[index].videos.length){
+            html +=`<img class="play-icon" src="/static/images/play.png" alt=''/>`
+        }
+        html += `<p>កំពុង​លេង...</p>`
+        html += `</a>`
+        html += `<div class="date">${(new Date(posts[index].date)).toLocaleDateString('it-IT')}</div>`
+        html += `<a class="title" onclick="changeCategory(false, false, false, false, ${index})">`
+        html += `<div >${posts[index].title}</div>`
+        html += `</a>`
+        html += `</div>`
+    }
+    html += `</div>`
+    html += displayHomePagination(pageAmount)
+    $(".Home").empty()
+    $(".Home").html(html)
+}
+
+function displayHomePagination(pageAmount){
+    let footer = `<div class="pagination">`
+    footer += `<span>​​​​​​​​​​​​​​​​​​​​​ទំព័រ </span> `
+    footer += `<select onchange="paginate(event)">`
+	for(const page of [...Array(pageAmount).keys()]){
+		footer += `<option>${page+1}</option>`
+	}
+	footer += `</select>` 
+    footer += ` <span>នៃ ${pageAmount}</span>`   
+    footer += `</div> `
+    return footer
+}
