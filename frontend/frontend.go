@@ -2,11 +2,15 @@
 package frontend
 
 import (
+	"encoding/json"
 	"fmt"
 	"gin/backend"
 	"gin/db"
+	"html/template"
 	"strconv"
+	"strings"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -76,7 +80,7 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		for i := 0; i < pageCount; i++ {
 			pageNumbers = append(pageNumbers, i+1)
 		}
-		fmt.Println(len(pageNumbers))
+
 		c.HTML(200, "category-frontend", gin.H{
 			"Title":       siteTitle,
 			"Posts":       posts,
@@ -89,6 +93,31 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	})
 
 	router.GET("/post/:id", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "Get specific post"})
+		session := sessions.Default(c)
+		siteTitle := backend.Setup().Title
+		id := c.Param("id")
+		post := db.GetPost(id)
+		parts := strings.Split(post.Categories, ",")
+		category := parts[0]
+		randomPosts := db.GetRandomPosts(7, category, id)
+		author := db.GetUser(post.Author)
+		authorName := author.Title
+		userRole := session.Get("userRole")
+
+		jsonDataString, err := json.Marshal(post)
+		if err != nil {
+			fmt.Println("Error marshalling string data:", err)
+		}
+		Post := string(jsonDataString)
+		SafeHTML := template.HTML(post.Content)
+		c.HTML(200, "post", gin.H{
+			"Title":       siteTitle,
+			"POST":        post,
+			"Post":        Post,
+			"AuthorName":  authorName,
+			"UserRole":    userRole,
+			"SafeHTML":    SafeHTML,
+			"RandomPosts": randomPosts,
+		})
 	})
 }

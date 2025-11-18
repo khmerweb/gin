@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -11,15 +13,15 @@ import (
 )
 
 type Post struct {
-	ID         string  `json:"id"`
-	Title      string  `json:"title" form:"title" binding:"required"`
-	Content    string  `json:"content" form:"content"`
-	Categories string  `json:"categories" form:"categories" binding:"required"`
-	Thumb      string  `json:"thumb" form:"thumb" binding:"required"`
-	Date       string  `json:"date" form:"date" binding:"required"`
-	Videos     string  `json:"videos" form:"videos"`
-	Author     string  `json:"author"`
-	Expiration *string `json:"expiration"`
+	ID         string     `json:"id"`
+	Title      string     `json:"title" form:"title" binding:"required"`
+	Content    string     `json:"content" form:"content"`
+	Categories string     `json:"categories" form:"categories" binding:"required"`
+	Thumb      string     `json:"thumb" form:"thumb" binding:"required"`
+	Date       string     `json:"date" form:"date" binding:"required"`
+	Videos     string     `json:"videos" form:"videos"`
+	Author     string     `json:"author"`
+	Expiration *time.Time `json:"expiration"`
 }
 
 func CreatePostSchema() {
@@ -35,7 +37,8 @@ func CreatePostSchema() {
 		videos TEXT,
 		author TEXT NOT NULL,
 		created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+		expiration TEXT
     );
 
 	CREATE TRIGGER IF NOT EXISTS delete_old_posts 
@@ -88,15 +91,29 @@ func CreatePost(c *gin.Context) {
 	userId, _ := c.Get("userId")
 	post.Author = userId.(string)
 
-	sql := `INSERT INTO Post (id, title, content, categories, thumb, date, videos, author) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err := mydb.Exec(sql, post.ID, post.Title, post.Content, post.Categories, post.Thumb, post.Date, post.Videos, post.Author)
-	if err != nil {
-		session.AddFlash("មាន​បញ្ហា​ក្នុង​ការបង្កើត​ការផ្សាយ!", "error")
-		session.Save()
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
+	if strings.Contains(post.Categories, "news") {
+		expireTime := 30 * 3 * 24 * time.Hour
+		currentTime := time.Now()
+		expiration := currentTime.Add(expireTime)
+		sql := `INSERT INTO Post (id, title, content, categories, thumb, date, videos, author, expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		_, err := mydb.Exec(sql, post.ID, post.Title, post.Content, post.Categories, post.Thumb, post.Date, post.Videos, post.Author, expiration)
+		if err != nil {
+			session.AddFlash("មាន​បញ្ហា​ក្នុង​ការបង្កើត​ការផ្សាយ!", "error")
+			session.Save()
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		sql := `INSERT INTO Post (id, title, content, categories, thumb, date, videos, author) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+		_, err := mydb.Exec(sql, post.ID, post.Title, post.Content, post.Categories, post.Thumb, post.Date, post.Videos, post.Author)
+		if err != nil {
+			session.AddFlash("មាន​បញ្ហា​ក្នុង​ការបង្កើត​ការផ្សាយ!", "error")
+			session.Save()
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
 	}
-	defer mydb.Close()
+
 	session.AddFlash("ការផ្សាយ​ត្រូវ​បាន​បង្កើត​ឡើងដោយ​ជោគជ័យ!", "success")
 	session.Save()
 }
@@ -401,4 +418,35 @@ func CountPostsByCategory(category string) int {
 	row.Scan(&count)
 
 	return count
+}
+
+func GetRandomPosts(limit int, category string, id string) []Post {
+	mydb := Connect()
+	defer mydb.Close()
+	post := &Post{}
+	var mysql string
+	if category == "news" {
+		mysql = `SELECT * FROM Post WHERE categories LIKE "%news%" AND id != ? ORDER BY date DESC LIMIT ?`
+	} else {
+		mysql = `SELECT * FROM Post WHERE categories LIKE "%` + category + `%" AND id != ? ORDER BY random() LIMIT ?`
+	}
+
+	rows, err := mydb.Query(mysql, id, limit)
+	if err != nil {
+		fmt.Println("Error querying database:", err)
+		return nil
+	}
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Categories, &post.Thumb, &post.Date, &post.Videos, &post.Author, &post.Expiration)
+		if err != nil {
+			fmt.Println("Error scanning row:", err)
+			continue
+		}
+		posts = append(posts, *post)
+	}
+
+	return posts
 }

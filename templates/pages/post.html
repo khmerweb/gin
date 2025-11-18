@@ -1,0 +1,179 @@
+{{define "content"}}
+<script>    
+    let post = JSON.parse({{.Post}})
+    const Categories = {
+        news: 'ព័ត៌មាន',
+        national: 'ក្នុង​ប្រទេស',
+        global: "ក្រៅ​ប្រទេស",
+        opinion: "មតិយោបល់",
+        documentary: "ឯកសារ",
+        sport: "កីឡា",
+        movie: 'ភាពយន្ត',
+        Khmer: 'រឿងខ្មែរ',
+        Thai: 'រឿងថៃ',
+        Chinese: 'រឿងចិន',
+        Korean: 'រឿងកូរ៉េ',
+        world: 'រឿង​​បរទេស',
+        travel: 'ដើរ​លេង',
+        simulation: 'ពិភព​និម្មិត',
+        food: 'មុខ​ម្ហូប',
+        music: 'របាំ​តន្ត្រី',
+        game: 'ល្បែង​កំសាន្ត'
+    }
+    
+    let postCategories = post.categories.split(",")
+    let categories = postCategories.map((category)=>Categories[category.trim()])
+    
+    $(document).ready(function() {
+        $(".chapter").append((categories.filter(Boolean)).join(', '))
+        $(".date").append((new Date(post.date)).toLocaleDateString('it-IT'))
+    })
+        
+    var disqus_config = function () {
+        this.page.url = `https://khmergo.vercel.app/post/${post.id}`;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = `${post.id}`; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://khmerweb-live.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+</script>
+
+<section class="Post region">
+    <div class="main">
+        <h3 class="title">{{.POST.Title}}</h3>
+        <div class="categories">
+            <span class="chapter">​​​​​​​​​ជំពូកៈ</span>
+            <span class="date"></span>
+        </div>
+        <div class="author">
+            <span>​​​​​​​​​​ចុះ​ផ្សាយ​ដោយៈ {{.AuthorName}}</span>
+        </div>
+        {{if gt (len .POST.Videos) 0}}
+            {{template "video.html" .}}
+        {{end}}
+        <div class="content">
+            {{.SafeHTML}}
+        </div>
+        <div class='post-bottom'>
+            <div class="social-media"></div>
+            {{if ne .UserRole nil}}
+            <div class='edit'>
+                <a href="`/admin/post/edit/${post.id}`"><img src="/static/images/edit.png" alt=''/></a>
+                <a href="`/admin/post/delete/${post.id}`"><img src="/static/images/delete.png" alt=''/></a>
+            </div>
+            {{end}}
+        </div>
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+    <div class="sidebar">
+        {{range .RandomPosts}}
+            <a  href="/post/{{.ID}}">
+                <img src="{{.Thumb}}" alt=''/>
+                {{if gt (len .Videos) 0}}
+                <img class="play-icon" src="/static/images/play.png" alt=''/>
+                {{end}}
+                <div class="title">{{.Title}}</div>
+            </a>
+        {{end}}
+    </div>
+</section>
+
+<style>
+.Post{
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 70% auto;
+    grid-gap: 15px;
+    padding-bottom: 30px;
+}
+.Post .main{
+    background-color: var(--panel);
+    color: rgb(22, 22, 22);
+    padding: 15px;
+}
+.Post .main .title{
+    font: 18px/1.5 Oswald, Koulen;
+    margin-bottom: 20px;
+}
+.Post .main .categories span:nth-child(2){
+    float: right;
+}
+.Post .main .author{
+    padding-bottom: 0px;
+}
+.Post .main .content{
+    margin: 20px 0;
+    font: 14px/1.5 Courgette, Nokora;
+}
+:global(.Post .main .content img){
+    width: 100%;
+}
+.Post .sidebar a{
+    display: block;
+    color: white;
+    position: relative;
+    padding-top: 56.25%;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.Post .sidebar a:last-child{
+    margin-bottom: 0;
+}
+.Post .sidebar a img{
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+    top: 0;
+    left: 0;
+}
+.Post .sidebar a .play-icon{
+    width: auto;
+    min-height: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 15%;
+}
+.Post .sidebar a .title{
+    position: absolute;
+    bottom: 0;
+    padding: 5px 10px;
+    font: 16px/1.5 Oswald, Bayon;
+    text-shadow: 2px 2px 4px #000000;
+    background: -webkit-linear-gradient(bottom, black,transparent);
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.Post .main .post-bottom{
+    display: grid;
+    grid-template-columns: auto auto;
+}
+.Post .main .post-bottom .edit{
+    text-align: right !important; 
+}
+.Post .main .post-bottom .edit img{
+    width: 30px;
+}
+.Post .main .social-media{
+    display: inline-block;
+}
+
+@media only screen and (max-width:600px){
+    .Post{
+        grid-template-columns: 100%;
+    }
+    .Post .sidebar{
+        padding: 0 15px;
+    }
+}
+</style>
+
+{{end}}

@@ -203,7 +203,6 @@ func GetUser(id string) User {
 		return User{}
 	}
 	defer mydb.Close()
-	fmt.Println(user.Title)
 	return *user
 }
 

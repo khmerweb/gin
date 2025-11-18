@@ -50,6 +50,16 @@ func CreateMyRender() multitemplate.Renderer {
 		"templates/partials/footer.html",
 	)
 
+	router.AddFromFilesFuncs("post", funcMap,
+		"templates/layouts/base.html",
+		"templates/partials/header.html",
+		"templates/partials/menu.html",
+		"templates/pages/post.html",
+		"templates/partials/video.html",
+		"templates/partials/ad.html",
+		"templates/partials/footer.html",
+	)
+
 	router.AddFromFilesFuncs("admin", funcMap,
 		"templates/layouts/baseAdmin.html",
 		"templates/pages/admin.html",
