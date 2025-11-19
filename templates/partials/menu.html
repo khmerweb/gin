@@ -1,6 +1,5 @@
 <script>
 const pageURL = {{.PageUrl}}
-let isresponsive = false
 
 let home = ''
 let news = ""
@@ -62,7 +61,12 @@ if(pageURL === '/'){
 }
 
 function myFunction() {
-  isresponsive = !isresponsive
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
 }
 </script>
 
@@ -70,7 +74,7 @@ function myFunction() {
     <nav class="nav">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="region">
-            <div data-sveltekit-reload class="topnav" class:responsive={isresponsive} id="myTopnav">
+            <div class="topnav" id="myTopnav">
                 <a href="/" class="home">ទំព័រ​ដើម</a>
                 <div class="dropdown news">
                   <button class="dropbtn">ព័ត៌មាន
@@ -111,7 +115,7 @@ function myFunction() {
                 </div>
                 <a href="/page/kLbYmi8rE1" class="contact">ទំនាក់ទំនង</a>
                 <a href="/page/rZuVKlXNb8" class="about">អំពីយើង​ខ្ញុំ</a>
-                <a href="javascript:void(0);" class="icon" onclick="myFunction">
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
                     <i class="fa fa-bars"></i>
                 </a>
             </div>
