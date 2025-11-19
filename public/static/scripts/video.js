@@ -13,6 +13,10 @@ function getCategory(){
 }
 
 const genJson = () => {
+    let videosStr = $('input[name="videos"]').val()
+    if(videosStr.length){
+        episode = (JSON.parse(videosStr)).length
+    }
     const type = $('select[name="type"').val()
     const id = $('input[name="videoid"').val()
     const ending = $('select[name="status"').val()

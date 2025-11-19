@@ -1,4 +1,7 @@
+{{template "base.html" .}}
+
 {{define "content"}}
+{{template "ad.html" .}}
 <script>    
     let post = JSON.parse({{.Post}})
     const Categories = {
@@ -47,7 +50,7 @@
     <div class="main">
         <h3 class="title">{{.POST.Title}}</h3>
         <div class="categories">
-            <span class="chapter">​​​​​​​​​ជំពូកៈ</span>
+            <span class="chapter">​​​​​​​​​ជំពូកៈ </span>
             <span class="date"></span>
         </div>
         <div class="author">

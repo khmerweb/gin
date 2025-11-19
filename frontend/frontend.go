@@ -120,4 +120,29 @@ func RegisterRoutes(router *gin.RouterGroup) {
 			"RandomPosts": randomPosts,
 		})
 	})
+
+	router.GET("/page/:id", func(c *gin.Context) {
+		session := sessions.Default(c)
+		userRole := session.Get("userRole")
+		siteTitle := backend.Setup().Title
+		id := c.Param("id")
+		page := db.GetPage(id)
+		SafeHTML := template.HTML(page.Content)
+		randomPosts := db.GetRandomPosts(3, "movie", id)
+		var pageURL string
+		if id == "kLbYmi8rE1" {
+			pageURL = "contact"
+		} else if id == "rZuVKlXNb8" {
+			pageURL = "about"
+		}
+
+		c.HTML(200, "page-frontend", gin.H{
+			"Title":       siteTitle,
+			"Page":        page,
+			"UserRole":    userRole,
+			"SafeHTML":    SafeHTML,
+			"RandomPosts": randomPosts,
+			"PageUrl":     pageURL,
+		})
+	})
 }

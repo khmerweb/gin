@@ -120,7 +120,7 @@ func GetPage(id string) Page {
 	page := &Page{}
 	mysql := `SELECT * FROM Page WHERE id = ?`
 	row := mydb.QueryRow(mysql, id)
-	err := row.Scan(&page.ID, &page.Title, &page.Content, &page.Thumb, &page.Date, &page.UpdatedAt)
+	err := row.Scan(&page.ID, &page.Title, &page.Content, &page.Thumb, &page.Date)
 	if err != nil {
 		fmt.Println("Error scanning row:", err)
 		return Page{}
